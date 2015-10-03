@@ -17,9 +17,9 @@ import java.util.UUID;
 public class B3D_Anim_Move extends B3D_AnimationCommand implements Serializable, Cloneable
 {
 
-    public B3D_Anim_Move(UUID obj, Vector3f val, Vector3f startVal, float t, float start, boolean exact)
+    public B3D_Anim_Move(UUID obj, Vector3f val, float t, float start, boolean exact)
     {
-        super(obj, val, startVal, t, start, exact);
+        super(obj, val, t, start, exact);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class B3D_Anim_Move extends B3D_AnimationCommand implements Serializable,
             return;
         }
         if (actualObj instanceof Spatial)
-            ((Spatial) actualObj).move(((Vector3f) value).mult(tpf).divide(duration));
+            ((Spatial) actualObj).move(((Vector3f) value).clone().mult(tpf).divide(duration));
         else if (actualObj instanceof SpotLight)
             ((SpotLight) actualObj).setPosition(((SpotLight) actualObj).getPosition().add(((Vector3f) value).mult(tpf).divide(duration)));
         else if (actualObj instanceof PointLight)
@@ -41,7 +41,7 @@ public class B3D_Anim_Move extends B3D_AnimationCommand implements Serializable,
     @Override
     protected Object clone() throws CloneNotSupportedException
     {
-        return new B3D_Anim_Move(objectID, (Vector3f) value, (Vector3f) startValue, duration, startTime, exact);
+        return new B3D_Anim_Move(objectID, (Vector3f) value, duration, startTime, exact);
     }
 
     @Override
@@ -53,10 +53,26 @@ public class B3D_Anim_Move extends B3D_AnimationCommand implements Serializable,
             return;
         }
         if (actualObj instanceof Spatial)
-            ((Spatial) actualObj).setLocalTranslation(((Vector3f) startValue).add((Vector3f) value));
-        else if (actualObj instanceof SpotLight)
-            ((SpotLight) actualObj).setPosition(((Vector3f) startValue).add((Vector3f) value));
+        {
+            System.out.println("Final: " + ((Spatial) actualObj).getLocalTranslation());
+            System.out.println("Wanted: " + ((Vector3f) startValue).clone().add((Vector3f) value));
+            ((Spatial) actualObj).setLocalTranslation(((Vector3f) startValue).clone().add((Vector3f) value));
+        } else if (actualObj instanceof SpotLight)
+            ((SpotLight) actualObj).setPosition(((Vector3f) startValue).clone().add((Vector3f) value));
         else if (actualObj instanceof PointLight)
-            ((PointLight) actualObj).setPosition(((Vector3f) startValue).add((Vector3f) value));
+            ((PointLight) actualObj).setPosition(((Vector3f) startValue).clone().add((Vector3f) value));
+    }
+
+    @Override
+    protected void saveStartValue(Object actualObject)
+    {
+        if (actualObject instanceof Spatial)
+        {
+            startValue = ((Spatial) actualObject).getLocalTranslation().clone();
+        } else if (actualObject instanceof SpotLight)
+            startValue = ((SpotLight) actualObject).getPosition().clone();
+        else if (actualObject instanceof PointLight)
+            startValue = ((PointLight) actualObject).getPosition().clone();
+        System.out.println("Set to: " + startValue);
     }
 }

@@ -20,15 +20,15 @@ public class B3D_Anim_Scale extends B3D_AnimationCommand implements Serializable
 
     private Vector3f originalVector;
 
-    public B3D_Anim_Scale(UUID obj, Vector3f val, Vector3f startVal, float t, float start, boolean exact)
+    public B3D_Anim_Scale(UUID obj, Vector3f val, float t, float start, boolean exact)
     {
-        super(obj, val, startVal, t, start);
+        super(obj, val, t, start);
         originalVector = ((Spatial) Wizard.getObjects().getOriginalObject(Wizard.getObjectReferences().getID(obj))).getLocalScale().clone();
     }
 
-    public B3D_Anim_Scale(UUID obj, float val, float startVal, float t, float start, boolean exact)
+    public B3D_Anim_Scale(UUID obj, float val, float t, float start, boolean exact)
     {
-        super(obj, val, startVal, t, start);
+        super(obj, val, t, start);
         Object object = (Wizard.getObjects().getOriginalObject(Wizard.getObjectReferences().getID(obj)));
         if (object instanceof Spatial)
             originalVector = ((Spatial) Wizard.getObjects().getOriginalObject(Wizard.getObjectReferences().getID(obj))).getLocalScale().clone();
@@ -57,9 +57,13 @@ public class B3D_Anim_Scale extends B3D_AnimationCommand implements Serializable
                 Vector3f currentScaling = new Vector3f((Vector3f) value);
                 currentScaling.multLocal(tpf / duration);
                 System.out.println("Current Scaling: " + currentScaling);
-                ((Spatial) actualObject).setLocalScale(((Spatial) actualObject).getLocalScale().add(currentScaling.x, currentScaling.y, currentScaling.z));
+                ((Spatial) actualObject).getLocalScale().addLocal(currentScaling.x, currentScaling.y, currentScaling.z);
             } else
-                ((Spatial) actualObject).setLocalScale(((Spatial) actualObject).getLocalScale().add(new Vector3f(1, 1, 1).mult((Float) value * tpf / duration)));
+            {
+                float val = (Float) value * tpf / duration;
+                ((Spatial) actualObject).getLocalScale().addLocal(
+                        new Vector3f(val, val, val));
+            }
         else if (actualObject instanceof PointLight)
         {
             PointLight pl = (PointLight) actualObject;
@@ -81,38 +85,53 @@ public class B3D_Anim_Scale extends B3D_AnimationCommand implements Serializable
     protected Object clone() throws CloneNotSupportedException
     {
         if (value instanceof Vector3f)
-            return new B3D_Anim_Scale(objectID, (Vector3f) value, (Vector3f) startValue, duration, startTime, exact);
-        return new B3D_Anim_Scale(objectID, (Float) value, (Float) startValue, duration, startTime, exact);
+            return new B3D_Anim_Scale(objectID, (Vector3f) value, duration, startTime, exact);
+        return new B3D_Anim_Scale(objectID, (Float) value, duration, startTime, exact);
     }
 
     @Override
-    protected void stepFinal(Object actualObject)
+    protected void stepFinal(Object actualObj)
     {
-        if (!(actualObject instanceof Spatial) && !(actualObject instanceof Light))
+        if (!(actualObj instanceof Spatial) && !(actualObj instanceof Light))
         {
             ObserverDialog.getObserverDialog().printMessage("The Object must either be a Light Source or a 3D-Object!");
             return;
         }
-        if (actualObject instanceof Spatial)
+        if (actualObj instanceof Spatial)
+        {
+            System.out.println("Final: " + ((Spatial) actualObj).getLocalScale());
+            System.out.println("Wanted: " + ((Vector3f) startValue).clone().add((Vector3f) value));
             if (value instanceof Vector3f)
             {
-                ((Spatial) actualObject).setLocalScale(((Vector3f) startValue).add((Vector3f) value));
+                ((Spatial) actualObj).setLocalScale(((Vector3f) startValue).add((Vector3f) value));
             } else
-                ((Spatial) actualObject).setLocalScale(((Float) startValue) + ((Float) value));
-        else if (actualObject instanceof PointLight)
+                ((Spatial) actualObj).setLocalScale(((Vector3f) startValue).add(new Vector3f((Float) value, (Float) value, (Float) value)));
+        } else if (actualObj instanceof PointLight)
         {
-            PointLight pl = (PointLight) actualObject;
+            PointLight pl = (PointLight) actualObj;
             float radius = (Float) startValue + (Float) value;
             if (radius < 0)
                 radius = 0;
             pl.setRadius(radius);
-        } else if (actualObject instanceof SpotLight)
+        } else if (actualObj instanceof SpotLight)
         {
-            SpotLight sl = (SpotLight) actualObject;
+            SpotLight sl = (SpotLight) actualObj;
             float range = (Float) startValue + (Float) value;
             if (range < 0)
                 range = 0;
             sl.setSpotRange(range);
         }
+    }
+
+    @Override
+    protected void saveStartValue(Object actualObject)
+    {
+        if (actualObject instanceof Spatial)
+            startValue = ((Spatial) actualObject).getLocalScale();
+        else if (actualObject instanceof PointLight)
+            startValue = ((PointLight) actualObject).getRadius();
+        else if (actualObject instanceof SpotLight)
+            startValue = ((SpotLight) actualObject).getSpotRange();
+        System.out.println("Set to: " + startValue);
     }
 }

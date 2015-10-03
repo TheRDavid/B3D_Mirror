@@ -71,9 +71,10 @@ public class AnimationTranslator
         //Some types do not have a duration, they happen & are over in an instant
         if (!type.equals("call") && !type.equals("fireParticles") && !type.equals("playMotion"))
         {
-            dec += value + " : " + anim.getDuration() * 1000 + " : " + anim.getStartTime() * 1000 + ";";
+            dec += value + " : " + anim.getDuration() * 1000 + " : " + anim.getStartTime() * 1000 + ":";
         } else
-            dec += value + " : " + anim.getStartTime() * 1000 + ";";
+            dec += value + " : " + anim.getStartTime() * 1000 + ":";
+        dec += anim.isExact() + ";";
         return dec;
     }
 
@@ -124,13 +125,7 @@ public class AnimationTranslator
             float valX = Float.parseFloat(valueTokenizer.nextToken());
             float valY = Float.parseFloat(valueTokenizer.nextToken());
             float valZ = Float.parseFloat(valueTokenizer.nextToken());
-            if (actualObject instanceof Spatial)
-                startValue = ((Spatial) actualObject).getLocalTranslation();
-            else if (actualObject instanceof SpotLight)
-                startValue = ((SpotLight) actualObject).getPosition();
-            else if (actualObject instanceof PointLight)
-                startValue = ((PointLight) actualObject).getPosition();
-            enc = new B3D_Anim_Move(object, new Vector3f(valX, valY, valZ), (Vector3f) startValue, durationMs, startTimeMs, exact.toLowerCase().equals("true"));
+            enc = new B3D_Anim_Move(object, new Vector3f(valX, valY, valZ), durationMs, startTimeMs, exact.toLowerCase().equals("true"));
         } else if (type.equals("rotate"))
         {
             float valX = Float.parseFloat(valueTokenizer.nextToken());
@@ -145,17 +140,9 @@ public class AnimationTranslator
                 float valX = Float.parseFloat(valueTokenizer.nextToken());
                 float valY = Float.parseFloat(valueTokenizer.nextToken());
                 float valZ = Float.parseFloat(valueTokenizer.nextToken());
-                enc = new B3D_Anim_Scale(object, new Vector3f(valX, valY, valZ), ((Spatial) actualObject).getLocalScale(), durationMs, startTimeMs, exact.toLowerCase().equals("true"));
+                enc = new B3D_Anim_Scale(object, new Vector3f(valX, valY, valZ), durationMs, startTimeMs, exact.toLowerCase().equals("true"));
             } else
-            {
-                if (actualObject instanceof Spatial)
-                    startValue = 1;
-                else if (actualObject instanceof SpotLight)
-                    startValue = ((SpotLight) actualObject).getSpotRange();
-                else if (actualObject instanceof PointLight)
-                    startValue = ((PointLight) actualObject).getRadius();
-                enc = new B3D_Anim_Scale(object, Float.parseFloat(value), (Float) startValue, durationMs, startTimeMs, exact.toLowerCase().equals("true"));
-            }
+                enc = new B3D_Anim_Scale(object, Float.parseFloat(value), durationMs, startTimeMs, exact.toLowerCase().equals("true"));
         } else if (type.equals("call"))
         {
             String uuidString = value.substring(0, value.indexOf("/"));

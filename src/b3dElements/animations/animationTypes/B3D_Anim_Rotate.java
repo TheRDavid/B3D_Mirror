@@ -21,7 +21,7 @@ public class B3D_Anim_Rotate extends B3D_AnimationCommand implements Serializabl
 
     public B3D_Anim_Rotate(UUID obj, Vector3f val, float t, float start, boolean exact)
     {
-        super(obj, val, null, t, start, exact);
+        super(obj, val, t, start, exact);
     }
 
     @Override
@@ -56,12 +56,18 @@ public class B3D_Anim_Rotate extends B3D_AnimationCommand implements Serializabl
             ObserverDialog.getObserverDialog().printMessage("The Object must either be a Light Source or a 3D-Object!");
             return;
         }
-        Vector3f fail = anglesDone.subtract((Vector3f) value).add((Vector3f) startValue);
+        Vector3f fail = ((Vector3f) value).subtract(anglesDone);
         if (actualObject instanceof Spatial)
             ((Spatial) actualObject).rotate(fail.getX(), fail.getY(), fail.getZ());
         else if (actualObject instanceof SpotLight)
             ((SpotLight) actualObject).setDirection(((SpotLight) actualObject).getDirection().add(fail));
         else if (actualObject instanceof DirectionalLight)
             ((DirectionalLight) actualObject).setDirection(((DirectionalLight) actualObject).getDirection().add(fail));
+    }
+
+    @Override
+    protected void saveStartValue(Object actualObject)
+    {
+        // Nothing to do here
     }
 }

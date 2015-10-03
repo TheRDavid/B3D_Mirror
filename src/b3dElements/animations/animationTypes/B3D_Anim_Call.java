@@ -16,7 +16,7 @@ public class B3D_Anim_Call extends B3D_AnimationCommand
 
     public B3D_Anim_Call(UUID obj, UUID calledObj, String animName, float start)
     {
-        super(obj, calledObj.toString() + animName, null, 1, start);
+        super(obj, calledObj.toString() + animName, 1, start);
         animationName = animName;
         calledObject = calledObj;
         duration = 1;
@@ -49,5 +49,11 @@ public class B3D_Anim_Call extends B3D_AnimationCommand
     protected void stepFinal(Object actualObject)
     {
         //Nothing to do here...
+    }
+
+    @Override
+    protected void saveStartValue(Object actualObject)
+    {
+        // Nothing to do here
     }
 }

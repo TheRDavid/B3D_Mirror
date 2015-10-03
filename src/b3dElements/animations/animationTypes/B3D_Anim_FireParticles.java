@@ -15,7 +15,7 @@ public class B3D_Anim_FireParticles extends B3D_AnimationCommand
 
     public B3D_Anim_FireParticles(UUID obj, Object val, float start)
     {
-        super(obj, val,null, 1, start);
+        super(obj, val, 1, start);
     }
 
     @Override
@@ -43,5 +43,11 @@ public class B3D_Anim_FireParticles extends B3D_AnimationCommand
     protected void stepFinal(Object actualObject)
     {
         //Nothing to do here
+    }
+
+    @Override
+    protected void saveStartValue(Object actualObject)
+    {
+        // Nothing to do here
     }
 }

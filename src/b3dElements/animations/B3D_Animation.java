@@ -43,6 +43,8 @@ public class B3D_Animation implements Serializable, Cloneable
         {
             ac.setDone(false);
             ac.setRemaining(ac.getDuration());
+            ac.setFirstStep(true);
+            ac.setPlaying(false);
         }
     }
 
