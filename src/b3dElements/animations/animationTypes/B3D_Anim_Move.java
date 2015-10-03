@@ -17,9 +17,9 @@ import java.util.UUID;
 public class B3D_Anim_Move extends B3D_AnimationCommand implements Serializable, Cloneable
 {
 
-    public B3D_Anim_Move(UUID obj, Vector3f val, float t, float start, boolean exact)
+    public B3D_Anim_Move(UUID obj, Vector3f val, float t, float start)
     {
-        super(obj, val, t, start, exact);
+        super(obj, val, t, start);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class B3D_Anim_Move extends B3D_AnimationCommand implements Serializable,
     @Override
     protected Object clone() throws CloneNotSupportedException
     {
-        return new B3D_Anim_Move(objectID, (Vector3f) value, duration, startTime, exact);
+        return new B3D_Anim_Move(objectID, (Vector3f) value, duration, startTime);
     }
 
     @Override

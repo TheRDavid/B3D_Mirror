@@ -19,9 +19,9 @@ public class B3D_Anim_Rotate extends B3D_AnimationCommand implements Serializabl
 
     private Vector3f anglesDone = new Vector3f();
 
-    public B3D_Anim_Rotate(UUID obj, Vector3f val, float t, float start, boolean exact)
+    public B3D_Anim_Rotate(UUID obj, Vector3f val, float t, float start)
     {
-        super(obj, val, t, start, exact);
+        super(obj, val, t, start);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class B3D_Anim_Rotate extends B3D_AnimationCommand implements Serializabl
     @Override
     protected Object clone() throws CloneNotSupportedException
     {
-        return new B3D_Anim_Rotate(objectID, (Vector3f) value, duration, startTime, exact);
+        return new B3D_Anim_Rotate(objectID, (Vector3f) value, duration, startTime);
     }
 
     @Override

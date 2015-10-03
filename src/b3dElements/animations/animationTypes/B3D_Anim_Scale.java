@@ -20,13 +20,13 @@ public class B3D_Anim_Scale extends B3D_AnimationCommand implements Serializable
 
     private Vector3f originalVector;
 
-    public B3D_Anim_Scale(UUID obj, Vector3f val, float t, float start, boolean exact)
+    public B3D_Anim_Scale(UUID obj, Vector3f val, float t, float start)
     {
         super(obj, val, t, start);
         originalVector = ((Spatial) Wizard.getObjects().getOriginalObject(Wizard.getObjectReferences().getID(obj))).getLocalScale().clone();
     }
 
-    public B3D_Anim_Scale(UUID obj, float val, float t, float start, boolean exact)
+    public B3D_Anim_Scale(UUID obj, float val, float t, float start)
     {
         super(obj, val, t, start);
         Object object = (Wizard.getObjects().getOriginalObject(Wizard.getObjectReferences().getID(obj)));
@@ -85,8 +85,8 @@ public class B3D_Anim_Scale extends B3D_AnimationCommand implements Serializable
     protected Object clone() throws CloneNotSupportedException
     {
         if (value instanceof Vector3f)
-            return new B3D_Anim_Scale(objectID, (Vector3f) value, duration, startTime, exact);
-        return new B3D_Anim_Scale(objectID, (Float) value, duration, startTime, exact);
+            return new B3D_Anim_Scale(objectID, (Vector3f) value, duration, startTime);
+        return new B3D_Anim_Scale(objectID, (Float) value, duration, startTime);
     }
 
     @Override
@@ -98,15 +98,11 @@ public class B3D_Anim_Scale extends B3D_AnimationCommand implements Serializable
             return;
         }
         if (actualObj instanceof Spatial)
-        {
-            System.out.println("Final: " + ((Spatial) actualObj).getLocalScale());
-            System.out.println("Wanted: " + ((Vector3f) startValue).clone().add((Vector3f) value));
             if (value instanceof Vector3f)
-            {
                 ((Spatial) actualObj).setLocalScale(((Vector3f) startValue).add((Vector3f) value));
-            } else
+            else
                 ((Spatial) actualObj).setLocalScale(((Vector3f) startValue).add(new Vector3f((Float) value, (Float) value, (Float) value)));
-        } else if (actualObj instanceof PointLight)
+        else if (actualObj instanceof PointLight)
         {
             PointLight pl = (PointLight) actualObj;
             float radius = (Float) startValue + (Float) value;

@@ -8,11 +8,7 @@ import b3dElements.animations.animationTypes.B3D_Anim_Move;
 import b3dElements.animations.animationTypes.B3D_Anim_PlayMotion;
 import b3dElements.animations.animationTypes.B3D_Anim_Rotate;
 import b3dElements.animations.animationTypes.B3D_Anim_Scale;
-import com.jme3.light.PointLight;
-import com.jme3.light.SpotLight;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Geometry;
-import com.jme3.scene.Spatial;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
@@ -73,8 +69,7 @@ public class AnimationTranslator
         {
             dec += value + " : " + anim.getDuration() * 1000 + " : " + anim.getStartTime() * 1000 + ":";
         } else
-            dec += value + " : " + anim.getStartTime() * 1000 + ":";
-        dec += anim.isExact() + ";";
+            dec += value + " : " + anim.getStartTime() * 1000 + ";";
         return dec;
     }
 
@@ -103,13 +98,8 @@ public class AnimationTranslator
         }
 
         start = lastDelim;
-        lastDelim = command.indexOf(":", start + 1);
-        String startTime = command.substring(start + 1, lastDelim);
+        String startTime = command.substring(start + 1);
         System.out.println("\t\t" + start + "->End StartTime: " + startTime);
-
-        //exact?
-        start = lastDelim;
-        exact = command.substring(start + 1);
 
         Object actualObject = Wizard.getObjects().getOriginalObject(Wizard.getObjectReferences().getID(object));
         Object startValue = null;
@@ -125,14 +115,14 @@ public class AnimationTranslator
             float valX = Float.parseFloat(valueTokenizer.nextToken());
             float valY = Float.parseFloat(valueTokenizer.nextToken());
             float valZ = Float.parseFloat(valueTokenizer.nextToken());
-            enc = new B3D_Anim_Move(object, new Vector3f(valX, valY, valZ), durationMs, startTimeMs, exact.toLowerCase().equals("true"));
+            enc = new B3D_Anim_Move(object, new Vector3f(valX, valY, valZ), durationMs, startTimeMs);
         } else if (type.equals("rotate"))
         {
             float valX = Float.parseFloat(valueTokenizer.nextToken());
             float valY = Float.parseFloat(valueTokenizer.nextToken());
             float valZ = Float.parseFloat(valueTokenizer.nextToken());
             //too stupid for this
-            enc = new B3D_Anim_Rotate(object, new Vector3f(valX, valY, valZ), durationMs, startTimeMs, exact.toLowerCase().equals("true"));
+            enc = new B3D_Anim_Rotate(object, new Vector3f(valX, valY, valZ), durationMs, startTimeMs);
         } else if (type.equals("scale"))
         {
             if (value.contains(","))
@@ -140,9 +130,9 @@ public class AnimationTranslator
                 float valX = Float.parseFloat(valueTokenizer.nextToken());
                 float valY = Float.parseFloat(valueTokenizer.nextToken());
                 float valZ = Float.parseFloat(valueTokenizer.nextToken());
-                enc = new B3D_Anim_Scale(object, new Vector3f(valX, valY, valZ), durationMs, startTimeMs, exact.toLowerCase().equals("true"));
+                enc = new B3D_Anim_Scale(object, new Vector3f(valX, valY, valZ), durationMs, startTimeMs);
             } else
-                enc = new B3D_Anim_Scale(object, Float.parseFloat(value), durationMs, startTimeMs, exact.toLowerCase().equals("true"));
+                enc = new B3D_Anim_Scale(object, Float.parseFloat(value), durationMs, startTimeMs);
         } else if (type.equals("call"))
         {
             String uuidString = value.substring(0, value.indexOf("/"));

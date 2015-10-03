@@ -13,7 +13,7 @@ public abstract class B3D_AnimationCommand implements Serializable, Cloneable
     protected UUID objectID;
     protected Object value, startValue;
     protected float duration, startTime, remaining;
-    protected boolean playing = false, done = false, exact = false, firstStep = true;
+    protected boolean playing = false, done = false, firstStep = true;
 
     public B3D_AnimationCommand(UUID obj, Object val, float dur, float start)
     {
@@ -26,7 +26,6 @@ public abstract class B3D_AnimationCommand implements Serializable, Cloneable
 
     public B3D_AnimationCommand(UUID obj, Object val, float dur, float start, boolean ex)
     {
-        exact = ex;
         objectID = obj;
         value = val;
         duration = dur;
@@ -96,7 +95,6 @@ public abstract class B3D_AnimationCommand implements Serializable, Cloneable
         {
             step(tpf, actualObject);
             remaining -= tpf;
-            if (exact)
                 if (remaining <= tpf * 1.1f)
                 {
                     System.out.println("Final step");
@@ -125,11 +123,6 @@ public abstract class B3D_AnimationCommand implements Serializable, Cloneable
     protected Object clone() throws CloneNotSupportedException
     {
         return super.clone(); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public boolean isExact()
-    {
-        return exact;
     }
 
     public void setPlaying(boolean playing)
