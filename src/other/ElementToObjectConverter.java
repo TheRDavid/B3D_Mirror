@@ -58,6 +58,7 @@ import b3dElements.other.B3D_MotionEvent;
 import b3dElements.other.B3D_MotionPath;
 import b3dElements.spatials.B3D_Heightmap;
 import b3dElements.spatials.B3D_Terrain;
+import b3dElements.spatials.geometries.B3D_HeightmapLink;
 import com.jme3.animation.LoopMode;
 import com.jme3.bullet.collision.shapes.BoxCollisionShape;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
@@ -559,9 +560,9 @@ public class ElementToObjectConverter
         } else if (b3D_Spatial instanceof B3D_Heightmap)
         {
             spatial = convertHeightmap((B3D_Heightmap) b3D_Spatial);
-        } else if (b3D_Spatial instanceof B3D_Terrain)
+        } else if (b3D_Spatial instanceof B3D_HeightmapLink)
         {
-            spatial = convertTerrain((B3D_Terrain) b3D_Spatial);
+            spatial = convertHeightmapLink((B3D_HeightmapLink) b3D_Spatial);
         } else if (b3D_Spatial instanceof B3D_Model)
         {
             spatial = convertModel((B3D_Model) b3D_Spatial);
@@ -1019,25 +1020,25 @@ public class ElementToObjectConverter
 
     private static Spatial convertHeightmap(B3D_Heightmap b3D_Heightmap)
     {
-        Texture heightMapImage = Wizard.getAssetManager().loadTexture(b3D_Heightmap.getPath());
-        ImageBasedHeightMap heightmap = new ImageBasedHeightMap(heightMapImage.getImage());
-        heightmap.load();
-        TerrainQuad terrain = new TerrainQuad(b3D_Heightmap.getName(), 65, heightmap.getSize(), heightmap.getHeightMap());
+        TerrainQuad terrain = new TerrainQuad(b3D_Heightmap.getName(), b3D_Heightmap.getPatchSize(), b3D_Heightmap.getTotalSize(), b3D_Heightmap.getHeight());
         terrain.setUserData("angles", new Vector3f());
         terrain.setUserData("scale", new Vector3f(1, 1, 1));
         terrain.setMaterial(new Material(Wizard.getAssetManager(),
                 "Common/MatDefs/Terrain/TerrainLighting.j3md"));
-        terrain.setUserData("heightmapLink", b3D_Heightmap.getPath());
         return terrain;
     }
 
-    private static Spatial convertTerrain(B3D_Terrain b3D_Terrain)
+    private static Spatial convertHeightmapLink(B3D_HeightmapLink b3d_HeightmapLink)
     {
-        TerrainQuad terrain = new TerrainQuad(b3D_Terrain.getName(), b3D_Terrain.getPatchSize(), b3D_Terrain.getTotalSize(), b3D_Terrain.getHeight());
+        Texture heightMapImage = Wizard.getAssetManager().loadTexture(b3d_HeightmapLink.getPath());
+        ImageBasedHeightMap heightmap = new ImageBasedHeightMap(heightMapImage.getImage());
+        heightmap.load();
+        TerrainQuad terrain = new TerrainQuad(b3d_HeightmapLink.getName(), 65, heightmap.getSize() + 1, heightmap.getHeightMap());
         terrain.setUserData("angles", new Vector3f());
         terrain.setUserData("scale", new Vector3f(1, 1, 1));
         terrain.setMaterial(new Material(Wizard.getAssetManager(),
                 "Common/MatDefs/Terrain/TerrainLighting.j3md"));
+        terrain.setUserData("heightmapLink", b3d_HeightmapLink.getPath());
         return terrain;
     }
 }

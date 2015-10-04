@@ -1,30 +1,55 @@
 package b3dElements.spatials;
 
+import b3dElements.other.B3D_Material;
 import java.io.Serializable;
 
 /**
  *
  * @author David
  */
-public class B3D_Heightmap extends B3D_Spatial implements Serializable
+public class B3D_Heightmap extends B3D_Terrain implements Serializable
 {
 
-    private String path;
+    private float[] height;
+    private int totalSize, patchSize;
 
-    public B3D_Heightmap(String _name, String _path, String _shadowMode)
+    public B3D_Heightmap(String name, float[] height, int totalSize, int patchSize, B3D_Material _material, String _shadowMode)
     {
-        setName(_name);
-        path = _path;
+        setMaterial(_material);
+        setName(name);
+        this.height = height;
+        this.totalSize = totalSize;
+        this.patchSize = patchSize;
         setShadowMode(_shadowMode);
     }
 
-    public String getPath()
+    public float[] getHeight()
     {
-        return path;
+        return height;
     }
 
-    public void setPath(String path)
+    public void setHeight(float[] height)
     {
-        this.path = path;
+        this.height = height;
+    }
+
+    public int getTotalSize()
+    {
+        return totalSize;
+    }
+
+    public void setTotalSize(int totalSize)
+    {
+        this.totalSize = totalSize;
+    }
+
+    public int getPatchSize()
+    {
+        return patchSize;
+    }
+
+    public void setPatchSize(int patchSize)
+    {
+        this.patchSize = patchSize;
     }
 }

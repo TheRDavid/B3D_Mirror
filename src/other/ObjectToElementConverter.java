@@ -58,6 +58,7 @@ import b3dElements.other.B3D_MotionEvent;
 import b3dElements.other.B3D_MotionPath;
 import b3dElements.spatials.B3D_Heightmap;
 import b3dElements.spatials.B3D_Terrain;
+import b3dElements.spatials.geometries.B3D_HeightmapLink;
 import com.jme3.bullet.collision.shapes.BoxCollisionShape;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.collision.shapes.CollisionShape;
@@ -501,7 +502,7 @@ public class ObjectToElementConverter
 
     public static B3D_Spatial convertSpatial(Spatial spatial)
     {
-        System.out.println("Spatial: "+spatial);
+        System.out.println("Spatial: " + spatial);
         spatial.setUserData("autoSyncPhysicsToTransform", "y");
         B3D_Spatial b3D_Spatial = null;
         if (spatial.getUserData("modelName") != null)
@@ -510,9 +511,9 @@ public class ObjectToElementConverter
         } else if (spatial instanceof TerrainQuad)
         {
             if (spatial.getUserData("heightmapLink") == null)
-                b3D_Spatial = convertTerrain((TerrainQuad) spatial);
+                b3D_Spatial = convertHeightmap((TerrainQuad) spatial);
             else
-                b3D_Spatial = convertHeightmap(spatial);
+                b3D_Spatial = convertHeightmapLink((TerrainQuad) spatial);
         } else if (spatial instanceof Node)
         {
             b3D_Spatial = convertNode((Node) spatial);
@@ -618,17 +619,19 @@ public class ObjectToElementConverter
         {
             b3D_Spatials.add(convertSpatial(spatial));
         }
-        return new B3D_Node(node.getName(), b3D_Spatials, node.getShadowMode().toString(), node.getUserData("isBatched")!=null);
+        return new B3D_Node(node.getName(), b3D_Spatials, node.getShadowMode().toString(), node.getUserData("isBatched") != null);
     }
 
-    private static B3D_Spatial convertTerrain(TerrainQuad terrainQuad)
+    private static B3D_Spatial convertHeightmapLink(TerrainQuad terrain)
     {
-        return new B3D_Terrain(terrainQuad.getName(), terrainQuad.getHeightMap(), terrainQuad.getTotalSize(), terrainQuad.getPatchSize(), terrainQuad.getShadowMode().toString());
+        B3D_Material b3D_Material = convertMaterial(terrain.getMaterial());
+        return new B3D_HeightmapLink(terrain.getName(), (String) terrain.getUserData("heightmapLink"), b3D_Material, terrain.getShadowMode().toString());
     }
 
-    private static B3D_Spatial convertHeightmap(Spatial terrain)
+    private static B3D_Spatial convertHeightmap(TerrainQuad terrainQuad)
     {
-        return new B3D_Heightmap(terrain.getName(), (String) terrain.getUserData("heightmapLink"), terrain.getShadowMode().toString());
+        B3D_Material b3D_Material = convertMaterial(terrainQuad.getMaterial());
+        return new B3D_Heightmap(terrainQuad.getName(), terrainQuad.getHeightMap(), terrainQuad.getTotalSize(), terrainQuad.getPatchSize(), b3D_Material, terrainQuad.getShadowMode().toString());
     }
 
     public static B3D_Box convertBox(Geometry geometry)
