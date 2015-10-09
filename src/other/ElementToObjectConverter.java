@@ -757,6 +757,7 @@ public class ElementToObjectConverter
         particleEmitter.setStartSize(b3D_ParticleEffect.getStartSize());
         particleEmitter.getParticleInfluencer().setInitialVelocity(b3D_ParticleEffect.getDirectionVelocity());
         particleEmitter.getParticleInfluencer().setVelocityVariation(b3D_ParticleEffect.getDirectionVariation());
+        particleEmitter.setQueueBucket(RenderQueue.Bucket.Translucent);
         return particleEmitter;
     }
 
@@ -1023,8 +1024,7 @@ public class ElementToObjectConverter
         TerrainQuad terrain = new TerrainQuad(b3D_Heightmap.getName(), b3D_Heightmap.getPatchSize(), b3D_Heightmap.getTotalSize(), b3D_Heightmap.getHeight());
         terrain.setUserData("angles", new Vector3f());
         terrain.setUserData("scale", new Vector3f(1, 1, 1));
-        terrain.setMaterial(new Material(Wizard.getAssetManager(),
-                "Common/MatDefs/Terrain/TerrainLighting.j3md"));
+        terrain.setMaterial(convertMaterial(b3D_Heightmap.getMaterial()));
         return terrain;
     }
 
@@ -1036,8 +1036,7 @@ public class ElementToObjectConverter
         TerrainQuad terrain = new TerrainQuad(b3d_HeightmapLink.getName(), 65, heightmap.getSize() + 1, heightmap.getHeightMap());
         terrain.setUserData("angles", new Vector3f());
         terrain.setUserData("scale", new Vector3f(1, 1, 1));
-        terrain.setMaterial(new Material(Wizard.getAssetManager(),
-                "Common/MatDefs/Terrain/TerrainLighting.j3md"));
+        terrain.setMaterial(convertMaterial(b3d_HeightmapLink.getMaterial()));
         terrain.setUserData("heightmapLink", b3d_HeightmapLink.getPath());
         return terrain;
     }
