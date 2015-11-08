@@ -142,6 +142,7 @@ public class B3D_Animation implements Serializable, Cloneable
     public B3D_Animation copy()
     {
         B3D_Animation animation = new B3D_Animation(objectID, name);
+        animation.setIterations(iterations);
         for (B3D_AnimationCommand command : commands)
         {
             try
@@ -149,7 +150,7 @@ public class B3D_Animation implements Serializable, Cloneable
                 animation.getCommands().add((B3D_AnimationCommand) command.clone());
             } catch (CloneNotSupportedException ex)
             {
-                Logger.getLogger(B3D_Animation.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             }
         }
         return animation;
