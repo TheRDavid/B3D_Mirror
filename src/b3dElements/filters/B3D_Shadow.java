@@ -1,11 +1,13 @@
 package b3dElements.filters;
 
+import b3dElements.B3D_Element;
 import static com.jme3.shadow.EdgeFilteringMode.Bilinear;
 import static com.jme3.shadow.EdgeFilteringMode.Dither;
 import static com.jme3.shadow.EdgeFilteringMode.Nearest;
 import static com.jme3.shadow.EdgeFilteringMode.PCF8;
 import java.io.Serializable;
 import java.util.UUID;
+import other.Wizard;
 
 public class B3D_Shadow extends B3D_Filter implements Serializable
 {
@@ -16,6 +18,13 @@ public class B3D_Shadow extends B3D_Filter implements Serializable
     private EdgeFilteringMode edgeFilteringMode;
     private UUID lightUUID;
     private LightType lightType;
+
+    /**
+     * Only use when set() is called afterwards
+     */
+    public B3D_Shadow()
+    {
+    }
 
     public B3D_Shadow(
             String _name,
@@ -146,5 +155,13 @@ public class B3D_Shadow extends B3D_Filter implements Serializable
     public void setLightType(LightType lightType)
     {
         this.lightType = lightType;
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_Shadow a = (B3D_Shadow) e;
+        Wizard.copyValues(a, this, getClass());
     }
 }

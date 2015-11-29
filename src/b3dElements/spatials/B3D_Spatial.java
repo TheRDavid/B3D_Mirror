@@ -11,7 +11,7 @@ import java.util.UUID;
 import java.util.Vector;
 import other.Wizard;
 
-public class B3D_Spatial extends B3D_Element implements Serializable
+public abstract class B3D_Spatial extends B3D_Element implements Serializable
 {
 
     private B3D_Physics physics;
@@ -106,5 +106,13 @@ public class B3D_Spatial extends B3D_Element implements Serializable
     public HashMap<String, String> getUserData()
     {
         return userData;
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_Spatial t = (B3D_Spatial) e;
+        Wizard.copyValues(t, this, getClass());
     }
 }

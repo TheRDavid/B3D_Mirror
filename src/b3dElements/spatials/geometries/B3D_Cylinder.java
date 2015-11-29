@@ -1,7 +1,9 @@
 package b3dElements.spatials.geometries;
 
+import b3dElements.B3D_Element;
 import b3dElements.other.B3D_Material;
 import java.io.Serializable;
+import other.Wizard;
 
 public class B3D_Cylinder extends B3D_Geometry implements Serializable
 {
@@ -9,6 +11,13 @@ public class B3D_Cylinder extends B3D_Geometry implements Serializable
     private int axisSamples, radialSamples;
     private float height, radius, radius2;
     private boolean isClosed, isInverted;
+
+    /**
+     * Only use when set() is called afterwards
+     */
+    public B3D_Cylinder()
+    {
+    }
 
     public B3D_Cylinder(
             String _name,
@@ -102,5 +111,13 @@ public class B3D_Cylinder extends B3D_Geometry implements Serializable
     public void setRadius2(float radius2)
     {
         this.radius2 = radius2;
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_Cylinder t = (B3D_Cylinder) e;
+        Wizard.copyValues(t, this, getClass());
     }
 }

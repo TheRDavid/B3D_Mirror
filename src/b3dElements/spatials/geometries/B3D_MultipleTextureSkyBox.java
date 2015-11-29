@@ -1,11 +1,20 @@
 package b3dElements.spatials.geometries;
 
+import b3dElements.B3D_Element;
 import java.io.Serializable;
+import other.Wizard;
 
 public class B3D_MultipleTextureSkyBox extends B3D_Geometry implements Serializable
 {
 
-    String northTextureName, soutTextureName, westTextureName, eastTextureName, topTextureName, bottomTextureName;
+    private String northTextureName, soutTextureName, westTextureName, eastTextureName, topTextureName, bottomTextureName;
+
+    /**
+     * Only use when set() is called afterwards
+     */
+    public B3D_MultipleTextureSkyBox()
+    {
+    }
 
     public B3D_MultipleTextureSkyBox(String _name, String _northTextureName,
             String _soutTextureName,
@@ -81,5 +90,13 @@ public class B3D_MultipleTextureSkyBox extends B3D_Geometry implements Serializa
     public void setBottomTextureName(String bottomTextureName)
     {
         this.bottomTextureName = bottomTextureName;
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_MultipleTextureSkyBox t = (B3D_MultipleTextureSkyBox) e;
+        Wizard.copyValues(t, this, getClass());
     }
 }

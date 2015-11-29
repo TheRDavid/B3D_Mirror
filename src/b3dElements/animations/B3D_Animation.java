@@ -1,16 +1,16 @@
 package b3dElements.animations;
 
+import b3dElements.B3D_Element;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import other.Wizard;
 
 /**
  *
  * @author David
  */
-public class B3D_Animation implements Serializable, Cloneable
+public class B3D_Animation extends B3D_Element implements Serializable, Cloneable
 {
 
     private ArrayList<B3D_AnimationCommand> commands = new ArrayList<B3D_AnimationCommand>();
@@ -20,6 +20,13 @@ public class B3D_Animation implements Serializable, Cloneable
     private float time = 0;
     public static final int LOOP = Integer.MAX_VALUE, DEFAULT = 1;
     private int iterations = DEFAULT, iterationsDone = 0;
+
+    /**
+     * Only use when set() is called afterwards
+     */
+    public B3D_Animation()
+    {
+    }
 
     public B3D_Animation(UUID obj, String name)
     {
@@ -145,13 +152,7 @@ public class B3D_Animation implements Serializable, Cloneable
         animation.setIterations(iterations);
         for (B3D_AnimationCommand command : commands)
         {
-            try
-            {
-                animation.getCommands().add((B3D_AnimationCommand) command.clone());
-            } catch (CloneNotSupportedException ex)
-            {
-                ex.printStackTrace();
-            }
+            animation.getCommands().add((B3D_AnimationCommand) command.clone());
         }
         return animation;
     }
@@ -164,5 +165,13 @@ public class B3D_Animation implements Serializable, Cloneable
     public void setIterations(int iterations)
     {
         this.iterations = iterations;
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_Animation a = (B3D_Animation) e;
+        Wizard.copyValues(a, this, getClass());
     }
 }

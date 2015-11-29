@@ -1,5 +1,6 @@
 package b3dElements.animations.animationTypes;
 
+import b3dElements.B3D_Element;
 import b3dElements.animations.B3D_AnimationCommand;
 import com.jme3.light.DirectionalLight;
 import com.jme3.light.Light;
@@ -9,6 +10,7 @@ import com.jme3.scene.Spatial;
 import dialogs.ObserverDialog;
 import java.io.Serializable;
 import java.util.UUID;
+import other.Wizard;
 
 /**
  *
@@ -18,6 +20,13 @@ public class B3D_Anim_Rotate extends B3D_AnimationCommand implements Serializabl
 {
 
     private Vector3f anglesDone = new Vector3f();
+
+    /**
+     * Only use when set() is called afterwards
+     */
+    public B3D_Anim_Rotate()
+    {
+    }
 
     public B3D_Anim_Rotate(UUID obj, Vector3f val, float t, float start)
     {
@@ -43,8 +52,8 @@ public class B3D_Anim_Rotate extends B3D_AnimationCommand implements Serializabl
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException
-    {
+    public B3D_Anim_Rotate clone()
+            {
         return new B3D_Anim_Rotate(objectID, (Vector3f) value, duration, startTime);
     }
 
@@ -69,5 +78,13 @@ public class B3D_Anim_Rotate extends B3D_AnimationCommand implements Serializabl
     protected void saveStartValue(Object actualObject)
     {
         // Nothing to do here
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_Anim_Rotate a = (B3D_Anim_Rotate) e;
+        Wizard.copyValues(a, this, getClass());
     }
 }

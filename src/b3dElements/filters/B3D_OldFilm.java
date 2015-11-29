@@ -1,12 +1,21 @@
 package b3dElements.filters;
 
+import b3dElements.B3D_Element;
 import com.jme3.math.ColorRGBA;
+import other.Wizard;
 
 public class B3D_OldFilm extends B3D_Filter
 {
 
     private ColorRGBA color;
     private float colorDensity, noiseDensity, scratchDensity, vignetteValue;
+
+    /**
+     * Only use when set() is called afterwards
+     */
+    public B3D_OldFilm()
+    {
+    }
 
     public B3D_OldFilm(String _name, int _index, ColorRGBA _color, float _colorDensity, float _noiseDensity, float _scratchDensity, float _vignetteValue)
     {
@@ -67,5 +76,13 @@ public class B3D_OldFilm extends B3D_Filter
     public void setVignetteValue(float vignetteValue)
     {
         this.vignetteValue = vignetteValue;
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_OldFilm a = (B3D_OldFilm) e;
+        Wizard.copyValues(a, this, getClass());
     }
 }

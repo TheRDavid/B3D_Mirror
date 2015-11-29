@@ -1,5 +1,7 @@
 package b3dElements.animations.animationTypes;
 
+import b3dElements.B3D_Element;
+import b3dElements.animations.B3D_Animation;
 import b3dElements.animations.B3D_AnimationCommand;
 import com.jme3.light.Light;
 import com.jme3.light.PointLight;
@@ -20,6 +22,13 @@ public class B3D_Anim_Scale extends B3D_AnimationCommand implements Serializable
 
     private Vector3f originalVector;
 
+    /**
+     * Only use when set() is called afterwards
+     */
+    public B3D_Anim_Scale()
+    {
+        
+    }
     public B3D_Anim_Scale(UUID obj, Vector3f val, float t, float start)
     {
         super(obj, val, t, start);
@@ -82,7 +91,7 @@ public class B3D_Anim_Scale extends B3D_AnimationCommand implements Serializable
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException
+    public B3D_Anim_Scale clone()
     {
         if (value instanceof Vector3f)
             return new B3D_Anim_Scale(objectID, (Vector3f) value, duration, startTime);
@@ -129,5 +138,13 @@ public class B3D_Anim_Scale extends B3D_AnimationCommand implements Serializable
         else if (actualObject instanceof SpotLight)
             startValue = ((SpotLight) actualObject).getSpotRange();
         System.out.println("Set to: " + startValue);
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_Anim_Scale a = (B3D_Anim_Scale) e;
+        Wizard.copyValues(a, this, getClass());
     }
 }

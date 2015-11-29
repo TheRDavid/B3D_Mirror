@@ -1,10 +1,20 @@
 package b3dElements.filters;
 
+import b3dElements.B3D_Element;
+import other.Wizard;
+
 public class B3D_BasicSSAO extends B3D_Filter
 {
 
     private float bias, detailBias, detailIntensity, detailSampleRadius, detailScale, falloffRate, falloffStartDistance, intensity, sampleRadius, scale;
     private boolean smoothMore, useAO, useOnlyAO, useDetailPass, useDistanceFalloff, useSmoothing;
+
+    /**
+     * Only use when set() is called afterwards
+     */
+    public B3D_BasicSSAO()
+    {
+    }
 
     public B3D_BasicSSAO(String _name, int _index, float _bias, float _detailBias, float _detailIntensity, float _detailSampleRadius, float _detailScale,
             float _falloffRate, float _falloffStartDistance, float _intensity, float _sampleRadius, float _scale, boolean _smoothMore, boolean _useAO,
@@ -188,5 +198,13 @@ public class B3D_BasicSSAO extends B3D_Filter
     public void setUseSmoothing(boolean useSmoothing)
     {
         this.useSmoothing = useSmoothing;
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_BasicSSAO a = (B3D_BasicSSAO) e;
+        Wizard.copyValues(a, this, getClass());
     }
 }

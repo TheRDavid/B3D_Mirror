@@ -1,7 +1,10 @@
 package b3dElements.controls;
 
+import b3dElements.B3D_Element;
+import b3dElements.animations.animationTypes.B3D_Anim_Call;
 import java.io.Serializable;
 import java.util.UUID;
+import other.Wizard;
 
 /**
  *
@@ -11,6 +14,13 @@ public class B3D_LightScatteringMotionControl extends B3D_Control implements Ser
 {
 
     private UUID filterID;
+
+    /**
+     * Only use when set() is called afterwards
+     */
+    public B3D_LightScatteringMotionControl()
+    {
+    }
 
     public B3D_LightScatteringMotionControl(UUID filterID, UUID spatialUUID, boolean enabled)
     {
@@ -27,5 +37,13 @@ public class B3D_LightScatteringMotionControl extends B3D_Control implements Ser
     public void setFilterID(UUID filterID)
     {
         this.filterID = filterID;
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_LightScatteringMotionControl a = (B3D_LightScatteringMotionControl) e;
+        Wizard.copyValues(a, this, getClass());
     }
 }

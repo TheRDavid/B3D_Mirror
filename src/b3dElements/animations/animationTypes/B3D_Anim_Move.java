@@ -1,5 +1,6 @@
 package b3dElements.animations.animationTypes;
 
+import b3dElements.B3D_Element;
 import b3dElements.animations.B3D_AnimationCommand;
 import com.jme3.light.Light;
 import com.jme3.light.PointLight;
@@ -9,6 +10,7 @@ import com.jme3.scene.Spatial;
 import dialogs.ObserverDialog;
 import java.io.Serializable;
 import java.util.UUID;
+import other.Wizard;
 
 /**
  *
@@ -16,6 +18,13 @@ import java.util.UUID;
  */
 public class B3D_Anim_Move extends B3D_AnimationCommand implements Serializable, Cloneable
 {
+
+    /**
+     * Only use when set() is called afterwards
+     */
+    public B3D_Anim_Move()
+    {
+    }
 
     public B3D_Anim_Move(UUID obj, Vector3f val, float t, float start)
     {
@@ -39,7 +48,7 @@ public class B3D_Anim_Move extends B3D_AnimationCommand implements Serializable,
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException
+    public B3D_Anim_Move clone()
     {
         return new B3D_Anim_Move(objectID, (Vector3f) value, duration, startTime);
     }
@@ -74,5 +83,13 @@ public class B3D_Anim_Move extends B3D_AnimationCommand implements Serializable,
         else if (actualObject instanceof PointLight)
             startValue = ((PointLight) actualObject).getPosition().clone();
         System.out.println("Set to: " + startValue);
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_Anim_Move a = (B3D_Anim_Move) e;
+        Wizard.copyValues(a, this, getClass());
     }
 }

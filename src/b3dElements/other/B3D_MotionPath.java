@@ -1,12 +1,14 @@
 package b3dElements.other;
 
 import b3dElements.B3D_Element;
+import b3dElements.physics.collisionShapes.B3D_BoxShape;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import java.io.Serializable;
 import java.util.Vector;
+import other.Wizard;
 
 public class B3D_MotionPath extends B3D_Element implements Serializable
 {
@@ -143,6 +145,7 @@ public class B3D_MotionPath extends B3D_Element implements Serializable
     {
         return lookAtObject;
     }
+
     /**
      * Should be a UUID in most cases (not if camera)
      * @param lookAtObjectID 
@@ -160,5 +163,13 @@ public class B3D_MotionPath extends B3D_Element implements Serializable
     public void setLoopMode(LoopMode loopMode)
     {
         this.loopMode = loopMode;
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_MotionPath b = (B3D_MotionPath) e;
+        Wizard.copyValues(b, this, getClass());
     }
 }

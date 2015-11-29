@@ -1,9 +1,11 @@
 package b3dElements.spatials.geometries.particleEmitter;
 
+import b3dElements.B3D_Element;
 import b3dElements.spatials.geometries.B3D_Geometry;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import java.io.Serializable;
+import other.Wizard;
 
 public class B3D_ParticleEffect extends B3D_Geometry implements Serializable
 {
@@ -21,6 +23,13 @@ public class B3D_ParticleEffect extends B3D_Geometry implements Serializable
     private boolean depthWrite, faceVelocity, firing;
     private Type type;
     private String textureName;
+
+    /**
+     * Only use when set() is called afterwards
+     */
+    public B3D_ParticleEffect()
+    {
+    }
 
     public B3D_ParticleEffect(String _name,
             String _textureName,
@@ -279,5 +288,13 @@ public class B3D_ParticleEffect extends B3D_Geometry implements Serializable
     public void setFiring(boolean firing)
     {
         this.firing = firing;
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_ParticleEffect b = (B3D_ParticleEffect) e;
+        Wizard.copyValues(b, this, getClass());
     }
 }

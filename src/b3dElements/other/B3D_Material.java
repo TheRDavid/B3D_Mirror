@@ -2,6 +2,7 @@ package b3dElements.other;
 
 import b3dElements.B3D_Element;
 import java.io.Serializable;
+import other.Wizard;
 
 public class B3D_Material extends B3D_Element implements Serializable
 {
@@ -41,5 +42,13 @@ public class B3D_Material extends B3D_Element implements Serializable
     public void setDefName(String dName)
     {
         defName = dName;
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_Material t = (B3D_Material) e;
+        Wizard.copyValues(t, this, getClass());
     }
 }

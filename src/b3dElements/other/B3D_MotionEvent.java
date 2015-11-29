@@ -1,7 +1,9 @@
 package b3dElements.other;
 
 import b3dElements.B3D_Element;
+import b3dElements.spatials.B3D_Heightmap;
 import java.io.Serializable;
+import other.Wizard;
 
 public class B3D_MotionEvent extends B3D_Element implements Serializable
 {
@@ -40,5 +42,13 @@ public class B3D_MotionEvent extends B3D_Element implements Serializable
     public void setMotionPath(B3D_MotionPath motionPath)
     {
         this.motionPath = motionPath;
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_MotionEvent t = (B3D_MotionEvent) e;
+        Wizard.copyValues(t, this, getClass());
     }
 }

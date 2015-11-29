@@ -78,6 +78,7 @@ import com.jme3.light.SpotLight;
 import com.jme3.material.MatParam;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.math.Vector4f;
@@ -308,7 +309,7 @@ public class ObjectToElementConverter
                 colorScaleFilter.getColorDensity(),
                 colorScaleFilter.isMultiply(),
                 colorScaleFilter.isOverlay(),
-                colorScaleFilter.getFilterColor());
+                new ColorRGBA(colorScaleFilter.getFilterColor()));
     }
 
     public static B3D_Crosshatch convertCrosshatch(CrossHatchFilter crossHatchFilter, int filterIndex)
@@ -352,12 +353,12 @@ public class ObjectToElementConverter
                 lightScatteringFilter.getBlurWidth(),
                 lightScatteringFilter.getLightDensity(),
                 lightScatteringFilter.getNbSamples(),
-                lightScatteringFilter.getLightPosition());
+                new Vector3f(lightScatteringFilter.getLightPosition()));
     }
 
     public static B3D_Fog convertFog(FogFilter fogFilter, int filterIndex)
     {
-        return new B3D_Fog(fogFilter.getName(), filterIndex, fogFilter.getFogColor(), fogFilter.getFogDensity(), fogFilter.getFogDistance());
+        return new B3D_Fog(fogFilter.getName(), filterIndex, new ColorRGBA(fogFilter.getFogColor()), fogFilter.getFogDensity(), fogFilter.getFogDistance());
     }
 
     public static B3D_FrostedGlass convertFrostedGlass(FrostedGlassFilter frostedGlassFilter, int filterIndex)
@@ -370,7 +371,7 @@ public class ObjectToElementConverter
         return new B3D_OldFilm(
                 oldFilmFilter.getName(),
                 filterIndex,
-                oldFilmFilter.getFilterColor(),
+                new ColorRGBA(oldFilmFilter.getFilterColor()),
                 oldFilmFilter.getColorDensity(),
                 oldFilmFilter.getNoiseDensity(),
                 oldFilmFilter.getScratchDensity(),
@@ -436,13 +437,13 @@ public class ObjectToElementConverter
                 waterFilter.getWaterHeight(),
                 waterFilter.getWaterTransparency(),
                 waterFilter.getWaveScale(),
-                waterFilter.getWindDirection(),
-                waterFilter.getColorExtinction(),
-                waterFilter.getFoamExistence(),
-                waterFilter.getLightDirection(),
-                waterFilter.getWaterColor(),
-                waterFilter.getDeepWaterColor(),
-                waterFilter.getLightColor(),
+                new Vector2f(waterFilter.getWindDirection()),
+                new Vector3f(waterFilter.getColorExtinction()),
+                new Vector3f(waterFilter.getFoamExistence()),
+                new Vector3f(waterFilter.getLightDirection()),
+                new ColorRGBA(waterFilter.getWaterColor()),
+                new ColorRGBA(waterFilter.getDeepWaterColor()),
+                new ColorRGBA(waterFilter.getLightColor()),
                 waterFilter.isUseCaustics(),
                 waterFilter.isUseFoam(),
                 waterFilter.isUseHQShoreline(),
@@ -475,26 +476,26 @@ public class ObjectToElementConverter
 
     public static B3D_DirectionalLight convertDirectionalLight(DirectionalLight directionalLight)
     {
-        return new B3D_DirectionalLight(directionalLight.getName(), directionalLight.getColor(), directionalLight.getDirection());
+        return new B3D_DirectionalLight(directionalLight.getName(), new ColorRGBA(directionalLight.getColor()), new Vector3f(directionalLight.getDirection()));
     }
 
     public static B3D_AmbientLight convertAmbientLight(AmbientLight ambientLight)
     {
-        return new B3D_AmbientLight(ambientLight.getName(), ambientLight.getColor());
+        return new B3D_AmbientLight(ambientLight.getName(), new ColorRGBA(ambientLight.getColor()));
     }
 
     public static B3D_PointLight convertPointLight(PointLight pointLight)
     {
-        return new B3D_PointLight(pointLight.getName(), pointLight.getColor(), pointLight.getPosition(), pointLight.getRadius());
+        return new B3D_PointLight(pointLight.getName(), new ColorRGBA(pointLight.getColor()), new Vector3f(pointLight.getPosition()), pointLight.getRadius());
     }
 
     public static B3D_SpotLight convertSpotLight(SpotLight spotLight)
     {
         return new B3D_SpotLight(
                 spotLight.getName(),
-                spotLight.getColor(),
-                spotLight.getPosition(),
-                spotLight.getDirection(),
+                new ColorRGBA(spotLight.getColor()),
+                new Vector3f(spotLight.getPosition()),
+                new Vector3f(spotLight.getDirection()),
                 spotLight.getSpotInnerAngle(),
                 spotLight.getSpotOuterAngle(),
                 spotLight.getSpotRange());
@@ -564,10 +565,10 @@ public class ObjectToElementConverter
             b3D_Spatial.setUuid(oldElement.getUUID());
             b3D_Spatial.setAnimations((ArrayList<B3D_Animation>) oldElement.getAnimations().clone());
         }
-        b3D_Spatial.setScale(spatial.getLocalScale());
-        b3D_Spatial.setAngles((Vector3f) spatial.getUserData("angles"));
-        b3D_Spatial.setTranslation(spatial.getLocalTranslation());
-        b3D_Spatial.setRotation(spatial.getLocalRotation());
+        b3D_Spatial.setScale(new Vector3f(spatial.getLocalScale()));
+        b3D_Spatial.setAngles(new Vector3f((Vector3f) spatial.getUserData("angles")));
+        b3D_Spatial.setTranslation(new Vector3f(spatial.getLocalTranslation()));
+        b3D_Spatial.setRotation(new Quaternion(spatial.getLocalRotation()));
         switch (spatial.getShadowMode())
         {
             case Cast:
@@ -698,12 +699,12 @@ public class ObjectToElementConverter
                 particleEmitter.getName(),
                 particleEmitter.getMaterial().getParam("Texture").toString(),
                 startShape,
-                particleEmitter.getGravity(),
-                particleEmitter.getParticleInfluencer().getInitialVelocity(),
+                new Vector3f(particleEmitter.getGravity()),
+                new Vector3f(particleEmitter.getParticleInfluencer().getInitialVelocity()),
                 particleEmitter.getStartSize(),
                 particleEmitter.getEndSize(),
-                particleEmitter.getStartColor(),
-                particleEmitter.getEndColor(),
+                new ColorRGBA(particleEmitter.getStartColor()),
+                new ColorRGBA(particleEmitter.getEndColor()),
                 particleEmitter.getParticleInfluencer().getVelocityVariation(),
                 particleEmitter.getHighLife(),
                 particleEmitter.getLowLife(),
@@ -714,7 +715,7 @@ public class ObjectToElementConverter
                 particleEmitter.getMaxNumParticles(),
                 particleEmitter.getMaterial().getAdditionalRenderState().isDepthWrite(),
                 particleEmitter.isFacingVelocity(),
-                particleEmitter.getFaceNormal(),
+                new Vector3f(particleEmitter.getFaceNormal()),
                 particleEmitter.isFiring(),
                 type,
                 particleEmitter.getShadowMode().toString());
@@ -826,8 +827,8 @@ public class ObjectToElementConverter
     {
         B3D_CShape b3D_Shape = convertCollisionShape(spatial.getControl(RigidBodyControl.class).getCollisionShape(), spatial, b3D_Spatial);
         return new B3D_Physics(
-                spatial.getControl(RigidBodyControl.class).getPhysicsLocation(),
-                spatial.getControl(RigidBodyControl.class).getPhysicsRotation(),
+                new Vector3f(spatial.getControl(RigidBodyControl.class).getPhysicsLocation()),
+                new Quaternion(spatial.getControl(RigidBodyControl.class).getPhysicsRotation()),
                 spatial.getControl(RigidBodyControl.class).getMass(),
                 spatial.getControl(RigidBodyControl.class).getFriction(),
                 spatial.getControl(RigidBodyControl.class).getRestitution(),
@@ -883,23 +884,22 @@ public class ObjectToElementConverter
                 color = ColorRGBA.Gray;
             }
         }
+        Quaternion rot = null;
+        if (motionEvent.getRotation() != null)
+            rot = new Quaternion(motionEvent.getRotation());
         b3D_MotionPath = new B3D_MotionPath(
                 lookAtObject,
                 motionEvent.getPath().getCurveTension(),
                 motionEvent.getSpeed(),
                 color,
                 motionEvent.getPath().isCycle(),
-                motionEvent.getRotation(),
+                rot,
                 motionEvent.getDirectionType(),
                 motionEvent.getLoopMode());
         for (int i = 0; i < motionEvent.getPath().getNbWayPoints(); i++)
-        {
             //If cycling, don't take the last waypoint
             if (!motionEvent.getPath().isCycle() || i < motionEvent.getPath().getNbWayPoints() - 1)
-            {
-                b3D_MotionPath.getWayPoints().add(motionEvent.getPath().getWayPoint(i));
-            }
-        }
+                b3D_MotionPath.getWayPoints().add(new Vector3f(motionEvent.getPath().getWayPoint(i)));
         UUID motionEventUUID = Wizard.getObjectReferences().getUUID(motionEvent.hashCode());
         b3D_MotionEvent = new B3D_MotionEvent(
                 Wizard.getObjects().getB3D_Element(motionEventUUID).getName(),

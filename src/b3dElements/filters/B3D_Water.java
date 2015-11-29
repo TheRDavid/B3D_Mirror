@@ -1,9 +1,11 @@
 package b3dElements.filters;
 
+import b3dElements.B3D_Element;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import java.io.Serializable;
+import other.Wizard;
 
 public class B3D_Water extends B3D_Filter implements Serializable
 {
@@ -16,6 +18,13 @@ public class B3D_Water extends B3D_Filter implements Serializable
     private ColorRGBA deepWaterColor, lightColor, color;
     private boolean useCausists, useFoam, useHQShoreLine, useRefraction, useRipples, useSpecular;
     private String causistsTexture, foamTexture, heightTexture, normalTexture;
+
+    /**
+     * Only use when set() is called afterwards
+     */
+    public B3D_Water()
+    {
+    }
 
     public B3D_Water(
             String _name,
@@ -419,5 +428,13 @@ public class B3D_Water extends B3D_Filter implements Serializable
     public void setNormalTexture(String normalTexture)
     {
         this.normalTexture = normalTexture;
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_Water a = (B3D_Water) e;
+        Wizard.copyValues(a, this, getClass());
     }
 }

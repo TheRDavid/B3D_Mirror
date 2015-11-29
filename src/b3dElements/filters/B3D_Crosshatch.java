@@ -1,7 +1,9 @@
 package b3dElements.filters;
 
+import b3dElements.B3D_Element;
 import com.jme3.math.ColorRGBA;
 import java.io.Serializable;
+import other.Wizard;
 
 public class B3D_Crosshatch extends B3D_Filter implements Serializable
 {
@@ -9,6 +11,13 @@ public class B3D_Crosshatch extends B3D_Filter implements Serializable
     private ColorRGBA lineColor, paperColor;
     private float colorInfluenceLine, colorInfluencePaper, fillValue, lineThickness, lineDistance;
     private Float[] luminanceLevels = new Float[5];
+
+    /**
+     * Only use when set() is called afterwards
+     */
+    public B3D_Crosshatch()
+    {
+    }
 
     public B3D_Crosshatch(String _name,
             int _index,
@@ -111,5 +120,13 @@ public class B3D_Crosshatch extends B3D_Filter implements Serializable
     public void setLuminanceLevels(Float[] luminanceLevels)
     {
         this.luminanceLevels = luminanceLevels;
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_Crosshatch a = (B3D_Crosshatch) e;
+        Wizard.copyValues(a, this, getClass());
     }
 }

@@ -4,11 +4,16 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.MotionPath;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
+import com.jme3.post.Filter;
 import com.jme3.renderer.Camera;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.CameraNode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.control.Control;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -22,12 +27,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 import java.util.UUID;
 import java.util.Vector;
+import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -147,7 +155,139 @@ public class Wizard
             oos.close();
         } catch (IOException ex)
         {
+            ex.printStackTrace();
         }
+    }
+
+    public static void completelyCopyValues(Object copyFrom, Object insertIn)
+    {
+        completelyCopyValues(copyFrom, insertIn, copyFrom.getClass());
+    }
+
+    public static void copyValues(Object copyFrom, Object insertIn)
+    {
+        copyValues(copyFrom, insertIn, copyFrom.getClass());
+    }
+
+    public static void completelyCopyValues(Object copyFrom, Object insertIn, Class c)
+    {
+        if (c.equals(Object.class))
+            return;
+        System.out.println("Copy comp from " + c);
+        if (!copyFrom.getClass().equals(insertIn.getClass()))
+        {
+            System.err.println("SET FAILED: " + copyFrom + " -> " + insertIn);
+            return;
+        }
+        if (c.equals(Spatial.class))
+            copySpatialValues((Spatial) copyFrom, (Spatial) insertIn);
+        else
+            copyValues(copyFrom, insertIn, c);
+        completelyCopyValues(copyFrom, insertIn, c.getSuperclass());
+    }
+
+    public static void copySpatialValues(final Spatial copyFrom, final Spatial insertIn)
+    {
+        app.enqueue(new Callable<Void>()
+        {
+            @Override
+            public Void call() throws Exception
+            {
+                for (String key : copyFrom.getUserDataKeys())
+                    insertIn.setUserData(key, copyFrom.getUserData(key));
+                insertIn.setLocalScale(new Vector3f(copyFrom.getLocalScale()));
+                insertIn.setName(copyFrom.getName());
+                insertIn.setLocalTranslation(new Vector3f(copyFrom.getLocalTranslation()));
+                insertIn.setLocalRotation(new Quaternion(copyFrom.getLocalRotation()));
+                if (copyFrom.getShadowMode().equals(RenderQueue.ShadowMode.Cast))
+                    insertIn.setShadowMode(RenderQueue.ShadowMode.Cast);
+                else if (copyFrom.getShadowMode().equals(RenderQueue.ShadowMode.CastAndReceive))
+                    insertIn.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
+                else if (copyFrom.getShadowMode().equals(RenderQueue.ShadowMode.Inherit))
+                    insertIn.setShadowMode(RenderQueue.ShadowMode.Inherit);
+                else if (copyFrom.getShadowMode().equals(RenderQueue.ShadowMode.Off))
+                    insertIn.setShadowMode(RenderQueue.ShadowMode.Off);
+                else
+                    insertIn.setShadowMode(RenderQueue.ShadowMode.Receive);
+                for (int i = 0; i < copyFrom.getNumControls(); i++)
+                {
+                    try
+                    {
+                        Control ac = copyFrom.getControl(i).getClass().newInstance();
+                        copyValues(ac, copyFrom.getControl(i));
+                        insertIn.addControl(ac);
+                    } catch (InstantiationException ex)
+                    {
+                        ex.printStackTrace();
+                    } catch (IllegalAccessException ex)
+                    {
+                        ex.printStackTrace();
+                    }
+
+                }
+                return null;
+            }
+        });
+    }
+    private static Object ii, cf;
+
+    public static void copyValues(Object copyFrom, Object insertIn, final Class c)
+    {
+        System.out.println("Copy from " + c);
+        if (!copyFrom.getClass().equals(insertIn.getClass()))
+        {
+            System.err.println("SET FAILED: " + copyFrom + " -> " + insertIn);
+            return;
+        }
+        ii = insertIn;
+        cf = copyFrom;
+        System.out.println("ii: " + ii + "\ncf: " + cf + "\nc: " + c.getName());
+        /*app.enqueue(new Callable<Void>()
+         {
+         @Override
+         public Void call() throws Exception
+         {*/
+        for (Field f : c.getDeclaredFields())
+            try
+            {
+                f.setAccessible(true);
+                if (!(ii instanceof Filter))
+                {
+                    System.out.println("Setting " + f.getName() + " from " + f.get(ii) + " to " + f.get(cf));
+                    f.set(ii, f.get(cf));
+                }
+                if (ii instanceof Filter)
+                {
+                    Filter fii = (Filter) ii;
+                    String method = "set" + Character.toUpperCase(f.getName().charAt(0)) + f.getName().substring(1);
+                    try
+                    {
+                        if (f.get(cf) != null)
+                            c.getMethod(method, f.getType()).invoke(ii, f.get(cf));
+                    } catch (NoSuchMethodException ex)
+                    {
+                        System.out.println("Could not invoke " + method + " (nsme)");
+                    } catch (SecurityException ex)
+                    {
+                        System.out.println("Could not invoke " + method + " (se)");
+                    } catch (InvocationTargetException ex)
+                    {
+                        System.out.println("Could not invoke " + method + " (ite)");
+                    }
+                }
+            } catch (SecurityException ex)
+            {
+                ex.printStackTrace();
+            } catch (IllegalArgumentException ex)
+            {
+                ex.printStackTrace();
+            } catch (IllegalAccessException ex)
+            {
+                System.out.println("Can not access " + f.getName());
+            }
+        /* return null;
+         }
+         });*/
     }
 
     public static HashMap readMat(File f)
@@ -161,13 +301,11 @@ public class Wizard
             zeile = null;
             boolean kE = false;
             while ((zeile = in.readLine()) != null)
-            {
                 if (!zeile.contains("{") && !zeile.contains("//") && !kE && !(zeile.trim().length() == 0))
                 {
                     if (zeile.contains("}"))
-                    {
                         kE = true;
-                    } else
+                    else
                     {
                         zeile = zeile.trim();
                         StringTokenizer st = new StringTokenizer(zeile, " ");
@@ -176,13 +314,14 @@ public class Wizard
                         hashMap.put(sToken, fToken);
                     }
                 }
-            }
         } catch (FileNotFoundException ex)
         {
-            Logger.getLogger(Wizard.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Wizard.class
+                    .getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex)
         {
-            Logger.getLogger(Wizard.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Wizard.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
         return hashMap;
@@ -299,33 +438,22 @@ public class Wizard
     public static void insertAllGeometrys(Node node, Vector<Geometry> geometrys)
     {
         for (Spatial child : node.getChildren())
-        {
             if (child.getUserData("modelChild") == null)
-            {
                 if (child instanceof Node)
-                {
                     insertAllGeometrys((Node) child, geometrys);
-                } else if (child instanceof Geometry)
-                {
+                else if (child instanceof Geometry)
                     geometrys.add((Geometry) child);
-                }
-            }
-        }
     }
 
     public static void insertAllSpatials(Node node, Vector<Spatial> spatials)
     {
         for (Spatial child : node.getChildren())
-        {
             if (child.getUserData("modelChild") == null)
             {
                 spatials.add(child);
                 if (child instanceof Node)
-                {
                     insertAllSpatials((Node) child, spatials);
-                }
             }
-        }
     }
 
     /**

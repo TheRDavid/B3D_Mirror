@@ -5,6 +5,7 @@ import b3dElements.B3D_Element;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import java.io.Serializable;
+import other.Wizard;
 
 public class B3D_Physics extends B3D_Element implements Serializable
 {
@@ -17,6 +18,13 @@ public class B3D_Physics extends B3D_Element implements Serializable
     private boolean kinematic;
     private Vector3f physicsLocation;
     private Quaternion physicsRotation;
+
+    /**
+     * Only use when set() is called afterwards
+     */
+    public B3D_Physics()
+    {
+    }
 
     public B3D_Physics(
             Vector3f _physicsLocation,
@@ -117,5 +125,13 @@ public class B3D_Physics extends B3D_Element implements Serializable
     public void setMotionThreshold(float motionThreshold)
     {
         this.motionThreshold = motionThreshold;
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_Physics b = (B3D_Physics) e;
+        Wizard.copyValues(b, this, getClass());
     }
 }

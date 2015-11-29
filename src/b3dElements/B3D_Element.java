@@ -80,4 +80,16 @@ public class B3D_Element implements Serializable, Cloneable
             throw new InternalError();
         }
     }
+
+    /**
+     * Makes this Element unique to e in every aspect apart from the ID
+     * @param e 
+     */
+    public void set(B3D_Element e)
+    {
+        Wizard.copyValues(e, this, B3D_Element.class);
+        /*setAnimations(e.getAnimations());
+         setName(e.getName());
+         * */
+    }
 }

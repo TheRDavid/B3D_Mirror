@@ -1,9 +1,11 @@
 package b3dElements.other;
 
+import b3dElements.B3D_Element;
 import java.io.Serializable;
 import java.util.HashMap;
+import other.Wizard;
 
-public class B3D_MaterialPropertyList implements Serializable
+public class B3D_MaterialPropertyList extends B3D_Element implements Serializable
 {
 
     private HashMap<String, Property> properties = new HashMap<String, Property>();
@@ -73,5 +75,13 @@ public class B3D_MaterialPropertyList implements Serializable
         {
             this.propertyValue = propertyValue;
         }
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_MaterialPropertyList t = (B3D_MaterialPropertyList) e;
+        Wizard.copyValues(t, this, getClass());
     }
 }

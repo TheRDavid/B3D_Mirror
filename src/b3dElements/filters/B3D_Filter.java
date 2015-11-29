@@ -1,8 +1,10 @@
 package b3dElements.filters;
 
+import b3dElements.B3D_Element;
 import java.io.Serializable;
+import other.Wizard;
 
-public class B3D_Filter extends b3dElements.B3D_Element implements Serializable
+public abstract class B3D_Filter extends b3dElements.B3D_Element implements Serializable
 {
 
     private int filterIndex;
@@ -37,5 +39,13 @@ public class B3D_Filter extends b3dElements.B3D_Element implements Serializable
     public void setEnabled(boolean enabled)
     {
         this.enabled = enabled;
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_Filter a = (B3D_Filter) e;
+        Wizard.copyValues(a, this, getClass());
     }
 }

@@ -1,13 +1,22 @@
 package b3dElements.filters;
 
+import b3dElements.B3D_Element;
 import com.jme3.math.ColorRGBA;
 import java.io.Serializable;
+import other.Wizard;
 
 public class B3D_Cartoon extends B3D_Filter implements Serializable
 {
 
     private ColorRGBA color;
     private float depthSensivity, depthTreshold, edgeIntensity, edgeWidth, normalSensivity, normalTreshold;
+
+    /**
+     * Only use when set() is called afterwards
+     */
+    public B3D_Cartoon()
+    {
+    }
 
     public B3D_Cartoon(String _name,
             int _index,
@@ -98,5 +107,13 @@ public class B3D_Cartoon extends B3D_Filter implements Serializable
     public void setNormalTreshold(float normalTreshold)
     {
         this.normalTreshold = normalTreshold;
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_Cartoon a = (B3D_Cartoon) e;
+        Wizard.copyValues(a, this, getClass());
     }
 }

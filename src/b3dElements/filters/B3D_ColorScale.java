@@ -1,6 +1,8 @@
 package b3dElements.filters;
 
+import b3dElements.B3D_Element;
 import com.jme3.math.ColorRGBA;
+import other.Wizard;
 
 public class B3D_ColorScale extends B3D_Filter
 {
@@ -8,6 +10,13 @@ public class B3D_ColorScale extends B3D_Filter
     private float colorDensity;
     private boolean multiply, overlay;
     private ColorRGBA color;
+
+    /**
+     * Only use when set() is called afterwards
+     */
+    public B3D_ColorScale()
+    {
+    }
 
     public B3D_ColorScale(String _name, int _index, float _colorDensity, boolean _multiply, boolean _overlay, ColorRGBA _color)
     {
@@ -57,5 +66,13 @@ public class B3D_ColorScale extends B3D_Filter
     public void setColor(ColorRGBA color)
     {
         this.color = color;
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_ColorScale a = (B3D_ColorScale) e;
+        Wizard.copyValues(a, this, getClass());
     }
 }

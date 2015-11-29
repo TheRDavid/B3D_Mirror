@@ -1,11 +1,20 @@
 package b3dElements.filters;
 
+import b3dElements.B3D_Element;
 import java.io.Serializable;
+import other.Wizard;
 
 public class B3D_Bloom extends B3D_Filter implements Serializable
 {
 
     private float intensity, blurScale, exposureCutOff, exposurePower, downSamplingFactor;
+
+    /**
+     * Only use when set() is called afterwards
+     */
+    public B3D_Bloom()
+    {
+    }
 
     public B3D_Bloom(String _name,
             int _index,
@@ -72,5 +81,13 @@ public class B3D_Bloom extends B3D_Filter implements Serializable
     public void setDownSamplingFactor(float downSamplingFactor)
     {
         this.downSamplingFactor = downSamplingFactor;
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_Bloom a = (B3D_Bloom) e;
+        Wizard.copyValues(a, this, getClass());
     }
 }

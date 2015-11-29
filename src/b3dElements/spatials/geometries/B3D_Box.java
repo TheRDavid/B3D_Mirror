@@ -1,12 +1,21 @@
 package b3dElements.spatials.geometries;
 
+import b3dElements.B3D_Element;
 import b3dElements.other.B3D_Material;
 import java.io.Serializable;
+import other.Wizard;
 
 public class B3D_Box extends B3D_Geometry implements Serializable
 {
 
     private int xSlices, ySlices, zSlices;
+
+    /**
+     * Only use when set() is called afterwards
+     */
+    public B3D_Box()
+    {
+    }
 
     public B3D_Box(String _name, B3D_Material _material, int _xSlices, int _ySlices, int _zSlices, String _shadowMode)
     {
@@ -46,5 +55,13 @@ public class B3D_Box extends B3D_Geometry implements Serializable
     public void setzSlices(int zSlices)
     {
         this.zSlices = zSlices;
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_Box t = (B3D_Box) e;
+        Wizard.copyValues(t, this, getClass());
     }
 }

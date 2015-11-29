@@ -1,19 +1,28 @@
 package b3dElements.animations;
 
+import b3dElements.B3D_Element;
 import java.io.Serializable;
 import java.util.UUID;
+import other.Wizard;
 
 /**
  *
  * @author David
  */
-public abstract class B3D_AnimationCommand implements Serializable, Cloneable
+public abstract class B3D_AnimationCommand extends B3D_Element implements Serializable, Cloneable
 {
 
     protected UUID objectID;
     protected Object value, startValue;
     protected float duration, startTime, remaining;
     protected boolean playing = false, done = false, firstStep = true;
+
+    /**
+     * Only use when set() is called afterwards
+     */
+    public B3D_AnimationCommand()
+    {
+    }
 
     public B3D_AnimationCommand(UUID obj, Object val, float dur, float start)
     {
@@ -95,15 +104,15 @@ public abstract class B3D_AnimationCommand implements Serializable, Cloneable
         {
             step(tpf, actualObject);
             remaining -= tpf;
-                if (remaining <= tpf * 1.1f)
-                {
-                    System.out.println("Final step");
-                    stepFinal(actualObject);
-                    remaining = duration;
-                    playing = false;
-                    firstStep = true;
-                    done = true;
-                }
+            if (remaining <= tpf * 1.1f)
+            {
+                System.out.println("Final step");
+                stepFinal(actualObject);
+                remaining = duration;
+                playing = false;
+                firstStep = true;
+                done = true;
+            }
         } else
         {
             remaining = duration;
@@ -120,9 +129,9 @@ public abstract class B3D_AnimationCommand implements Serializable, Cloneable
     protected abstract void saveStartValue(Object actualObject);
 
     @Override
-    protected Object clone() throws CloneNotSupportedException
+    public B3D_AnimationCommand clone()
     {
-        return super.clone(); //To change body of generated methods, choose Tools | Templates.
+        return (B3D_AnimationCommand) super.clone(); //To change body of generated methods, choose Tools | Templates.
     }
 
     public void setPlaying(boolean playing)
@@ -133,5 +142,13 @@ public abstract class B3D_AnimationCommand implements Serializable, Cloneable
     public void setFirstStep(boolean firstStep)
     {
         this.firstStep = firstStep;
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_AnimationCommand a = (B3D_AnimationCommand) e;
+        Wizard.copyValues(a, this, getClass());
     }
 }

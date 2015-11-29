@@ -1,5 +1,6 @@
 package b3dElements.animations.animationTypes;
 
+import b3dElements.B3D_Element;
 import b3dElements.animations.B3D_AnimationCommand;
 import java.util.UUID;
 import other.Wizard;
@@ -13,6 +14,13 @@ public class B3D_Anim_Call extends B3D_AnimationCommand
 
     private UUID calledObject;
     private String animationName;
+
+    /**
+     * Only use when set() is called afterwards
+     */
+    public B3D_Anim_Call()
+    {
+    }
 
     public B3D_Anim_Call(UUID obj, UUID calledObj, String animName, float start)
     {
@@ -55,5 +63,13 @@ public class B3D_Anim_Call extends B3D_AnimationCommand
     protected void saveStartValue(Object actualObject)
     {
         // Nothing to do here
+    }
+
+    @Override
+    public void set(B3D_Element e)
+    {
+        super.set(e);
+        B3D_Anim_Call a = (B3D_Anim_Call) e;
+        Wizard.copyValues(a, this, getClass());
     }
 }
