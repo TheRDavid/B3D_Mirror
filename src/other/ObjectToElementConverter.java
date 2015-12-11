@@ -57,7 +57,6 @@ import b3dElements.other.B3D_MaterialPropertyList;
 import b3dElements.other.B3D_MotionEvent;
 import b3dElements.other.B3D_MotionPath;
 import b3dElements.spatials.B3D_Heightmap;
-import b3dElements.spatials.B3D_Terrain;
 import b3dElements.spatials.geometries.B3D_HeightmapLink;
 import com.jme3.bullet.collision.shapes.BoxCollisionShape;
 import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
@@ -126,22 +125,16 @@ public class ObjectToElementConverter
     {
         B3D_Element element = null;
         if (object instanceof Filter)
-        {
             //If there is no filterIndex as parameter, it is set to 0
             element = convertFilter((Filter) object, 0);
-        } else if (object instanceof Light)
-        {
+        else if (object instanceof Light)
             element = convertLight((Light) object);
-        } else if (object instanceof Spatial)
-        {
+        else if (object instanceof Spatial)
             element = convertSpatial((Spatial) object);
-        } else if (object instanceof MotionEvent)
-        {
+        else if (object instanceof MotionEvent)
             element = convertMotionEvent((MotionEvent) object);
-        } else if (object instanceof Material)
-        {
+        else if (object instanceof Material)
             element = convertMaterial((Material) object);
-        }
         return element;
     }
 
@@ -149,60 +142,41 @@ public class ObjectToElementConverter
     {
         B3D_Filter b3D_Filter = null;
         if (filter instanceof BasicSSAO)
-        {
             b3D_Filter = convertBasicSSAO((BasicSSAO) filter, filterIndex);
-        } else if (filter instanceof BloomFilter)
-        {
+        else if (filter instanceof BloomFilter)
             b3D_Filter = convertBloom((BloomFilter) filter, filterIndex);
-        } else if (filter instanceof CartoonEdgeFilter)
-        {
+        else if (filter instanceof CartoonEdgeFilter)
             b3D_Filter = convertCartoon((CartoonEdgeFilter) filter, filterIndex);
-        } else if (filter instanceof ColorScaleFilterWithGetters)
-        {
+        else if (filter instanceof ColorScaleFilterWithGetters)
             b3D_Filter = convertColorScale((ColorScaleFilterWithGetters) filter, filterIndex);
-        } else if (filter instanceof CrossHatchFilter)
-        {
+        else if (filter instanceof CrossHatchFilter)
             b3D_Filter = convertCrosshatch((CrossHatchFilter) filter, filterIndex);
-        } else if (filter instanceof DepthOfFieldFilter)
-        {
+        else if (filter instanceof DepthOfFieldFilter)
             b3D_Filter = convertDOF((DepthOfFieldFilter) filter, filterIndex);
-        } else if (filter instanceof LightScatteringFilter)
-        {
+        else if (filter instanceof LightScatteringFilter)
             b3D_Filter = convertLightScattering((LightScatteringFilter) filter, filterIndex);
-        } else if (filter instanceof FogFilter)
-        {
+        else if (filter instanceof FogFilter)
             b3D_Filter = convertFog((FogFilter) filter, filterIndex);
-        } else if (filter instanceof FrostedGlassFilter)
-        {
+        else if (filter instanceof FrostedGlassFilter)
             b3D_Filter = convertFrostedGlass((FrostedGlassFilter) filter, filterIndex);
-        } else if (filter instanceof OldFilmFilter)
-        {
+        else if (filter instanceof OldFilmFilter)
             b3D_Filter = convertOldFilm((OldFilmFilter) filter, filterIndex);
-        } else if (filter instanceof PosterizationFilter)
-        {
+        else if (filter instanceof PosterizationFilter)
             b3D_Filter = convertPosterization((PosterizationFilter) filter, filterIndex);
-        } else if (filter instanceof SSAOFilter)
-        {
+        else if (filter instanceof SSAOFilter)
             b3D_Filter = convertSSAO((SSAOFilter) filter, filterIndex);
-        } else if (filter instanceof WaterFilterWithGetters)
-        {
+        else if (filter instanceof WaterFilterWithGetters)
             b3D_Filter = convertWater((WaterFilterWithGetters) filter, filterIndex);
-        } else if (filter instanceof DirectionalLightShadowFilterWithGetters)
-        {
+        else if (filter instanceof DirectionalLightShadowFilterWithGetters)
             b3D_Filter = convertDirectionalLightShadow((DirectionalLightShadowFilterWithGetters) filter, filterIndex);
-        } else if (filter instanceof PointLightShadowFilterWithGetters)
-        {
+        else if (filter instanceof PointLightShadowFilterWithGetters)
             b3D_Filter = convertPointLightShadow((PointLightShadowFilterWithGetters) filter, filterIndex);
-        } else if (filter instanceof SpotLightShadowFilterWithGetters)
-        {
+        else if (filter instanceof SpotLightShadowFilterWithGetters)
             b3D_Filter = convertSpotLightShadow((SpotLightShadowFilterWithGetters) filter, filterIndex);
-        } else if (filter instanceof PointLightShadowFilterWithGetters)
-        {
+        else if (filter instanceof PointLightShadowFilterWithGetters)
             b3D_Filter = convertPointLightShadow((PointLightShadowFilterWithGetters) filter, filterIndex);
-        } else if (filter instanceof SpotLightShadowFilter)
-        {
+        else if (filter instanceof SpotLightShadowFilter)
             b3D_Filter = convertSpotLightShadow((SpotLightShadowFilterWithGetters) filter, filterIndex);
-        }
         b3D_Filter.setEnabled(filter.isEnabled());
         return b3D_Filter;
     }
@@ -403,21 +377,13 @@ public class ObjectToElementConverter
     {
         String causticsTexture = null, foamTexture = null, heightTexture = null, normalTexture = null;
         if (waterFilter.getCausticsTexture() != null)
-        {
             causticsTexture = waterFilter.getCausticsTexture().getKey().getName();
-        }
         if (waterFilter.getFoamTexture() != null)
-        {
             foamTexture = waterFilter.getFoamTexture().getKey().getName();
-        }
         if (waterFilter.getHeightTexture() != null)
-        {
             heightTexture = waterFilter.getHeightTexture().getKey().getName();
-        }
         if (waterFilter.getNormalTexture() != null)
-        {
             normalTexture = waterFilter.getNormalTexture().getKey().getName();
-        }
         return new B3D_Water(
                 waterFilter.getName(),
                 filterIndex,
@@ -459,18 +425,13 @@ public class ObjectToElementConverter
     public static B3D_Light convertLight(Light light)
     {
         if (light instanceof DirectionalLight)
-        {
             return convertDirectionalLight((DirectionalLight) light);
-        } else if (light instanceof AmbientLight)
-        {
+        else if (light instanceof AmbientLight)
             return convertAmbientLight((AmbientLight) light);
-        } else if (light instanceof PointLight)
-        {
+        else if (light instanceof PointLight)
             return convertPointLight((PointLight) light);
-        } else if (light instanceof SpotLight)
-        {
+        else if (light instanceof SpotLight)
             return convertSpotLight((SpotLight) light);
-        }
         return null;
     }
 
@@ -507,15 +468,13 @@ public class ObjectToElementConverter
         spatial.setUserData("autoSyncPhysicsToTransform", "y");
         B3D_Spatial b3D_Spatial = null;
         if (spatial.getUserData("modelName") != null)
-        {
             b3D_Spatial = convertModel(spatial);
-        } else if (spatial instanceof TerrainQuad)
-        {
+        else if (spatial instanceof TerrainQuad)
             if (spatial.getUserData("heightmapLink") == null)
                 b3D_Spatial = convertHeightmap((TerrainQuad) spatial);
             else
                 b3D_Spatial = convertHeightmapLink((TerrainQuad) spatial);
-        } else if (spatial instanceof Node)
+        else if (spatial instanceof Node)
         {
             b3D_Spatial = convertNode((Node) spatial);
         } else if (spatial instanceof Geometry)
@@ -530,35 +489,22 @@ public class ObjectToElementConverter
             } else if (spatial.getUserData("north") != null)
             {
                 if (spatial.getUserData("south") != null)
-                {
                     b3D_Spatial = convertMultipleTexturesSkyBox(geometry);
-                } else
-                {
+                else
                     b3D_Spatial = convertSingleTextureSkyBox(geometry);
-                }
             } else if (geometry.getMesh() instanceof Sphere)
-            {
                 b3D_Spatial = convertSphere(geometry);
-            } else if (geometry.getMesh() instanceof Torus)
-            {
+            else if (geometry.getMesh() instanceof Torus)
                 b3D_Spatial = convertTorus(geometry);
-            } else if (geometry instanceof CustomParticleEmitter)
-            {
+            else if (geometry instanceof CustomParticleEmitter)
                 b3D_Spatial = convertParticleEmitter((CustomParticleEmitter) geometry);
-            }
         }
         System.out.println("B3D_Spatial: " + b3D_Spatial);
         if (spatial.getParent() != null && Wizard.getObjectReferences().getUUID(spatial.getParent().hashCode()) != null)
-        {
             b3D_Spatial.setParentUUID((UUID) (Wizard.getObjectReferences().getUUID(spatial.getParent().hashCode())));
-        }
         for (String key : spatial.getUserDataKeys())
-        {
             if (!Wizard.getReservedUserData().contains(key))
-            {
                 b3D_Spatial.getUserData().put(key, spatial.getUserData(key).toString());
-            }
-        }
         B3D_Spatial oldElement = (B3D_Spatial) Wizard.getObjects().getB3D_Element(Wizard.getObjectReferences().getUUID(spatial.hashCode()));
         if (oldElement != null && convertMode.equals(ConvertMode.SAVING))
         {
@@ -588,18 +534,12 @@ public class ObjectToElementConverter
                 break;
         }
         for (int i = 0; i < spatial.getNumControls(); i++)
-        {
             if (spatial.getControl(i) instanceof RigidBodyControl)
-            {
                 b3D_Spatial.setPhysics(convertPhysics(spatial, b3D_Spatial));
-            } else if (spatial.getControl(i) instanceof LightControl)
-            {
+            else if (spatial.getControl(i) instanceof LightControl)
                 b3D_Spatial.getControls().add(convertLightControl(b3D_Spatial, (LightControl) spatial.getControl(i)));
-            } else if (spatial.getControl(i) instanceof LightScatteringMotionControl)
-            {
+            else if (spatial.getControl(i) instanceof LightScatteringMotionControl)
                 b3D_Spatial.getControls().add(convertLightScatteringMotionControl((LightScatteringMotionControl) spatial.getControl(i)));
-            }
-        }
         return b3D_Spatial;
     }
 
@@ -617,9 +557,7 @@ public class ObjectToElementConverter
     {
         Vector<B3D_Spatial> b3D_Spatials = new Vector<B3D_Spatial>();
         for (Spatial spatial : node.getChildren())
-        {
             b3D_Spatials.add(convertSpatial(spatial));
-        }
         return new B3D_Node(node.getName(), b3D_Spatials, node.getShadowMode().toString(), node.getUserData("isBatched") != null);
     }
 
@@ -675,26 +613,22 @@ public class ObjectToElementConverter
     {
         B3D_ParticleEffect.Type type;
         if (particleEmitter.getMeshType().equals(ParticleMesh.Type.Point))
-        {
             type = B3D_ParticleEffect.Type.Point;
-        } else
-        {
+        else
             type = B3D_ParticleEffect.Type.Triangle;
-        }
         B3D_StartShape startShape = null;
         if (particleEmitter.getShape() instanceof EmitterBoxShape)
-        {
             startShape = new B3D_BoxStartShape(
                     ((EmitterBoxShape) particleEmitter.getShape()).getMin(),
                     ((EmitterBoxShape) particleEmitter.getShape()).getLen().addLocal(((EmitterBoxShape) particleEmitter.getShape()).getMin()));
-        } else if (particleEmitter.getShape() instanceof EmitterSphereShape)
-        {
+        else if (particleEmitter.getShape() instanceof EmitterSphereShape)
             startShape = new B3D_SphereStartShape(((EmitterSphereShape) particleEmitter.getShape()).getCenter(),
                     ((EmitterSphereShape) particleEmitter.getShape()).getRadius());
-        } else if (particleEmitter.getShape() instanceof EmitterPointShape)
-        {
+        else if (particleEmitter.getShape() instanceof EmitterPointShape)
             startShape = new B3D_PointStartShape(((EmitterPointShape) particleEmitter.getShape()).getPoint());
-        }
+        Vector3f fn = null;
+        if (particleEmitter.getFaceNormal() != null)
+            fn = new Vector3f(particleEmitter.getFaceNormal());
         return new B3D_ParticleEffect(
                 particleEmitter.getName(),
                 particleEmitter.getMaterial().getParam("Texture").toString(),
@@ -714,8 +648,7 @@ public class ObjectToElementConverter
                 particleEmitter.getImagesY(),
                 particleEmitter.getMaxNumParticles(),
                 particleEmitter.getMaterial().getAdditionalRenderState().isDepthWrite(),
-                particleEmitter.isFacingVelocity(),
-                new Vector3f(particleEmitter.getFaceNormal()),
+                particleEmitter.isFacingVelocity(), fn,
                 particleEmitter.isFiring(),
                 type,
                 particleEmitter.getShadowMode().toString());
@@ -776,7 +709,6 @@ public class ObjectToElementConverter
                         //System.out.println("PropertyList - Boolean: " + matParam.getName() + " -> " + matParam.getValueAsString());
                         b3D_MaterialPropertyList.add(matParam.getName(), "boolean", matParam.getValueAsString());
                     } else if (varType.equals(VarType.Vector4))
-                    {
                         //ColorRGBA wird als Vector4 erkannt...
                         if (matParam.getValue() instanceof ColorRGBA)
                         {
@@ -788,7 +720,7 @@ public class ObjectToElementConverter
                             Vector4f matVector = (Vector4f) matParam.getValue();
                             b3D_MaterialPropertyList.add(matParam.getName(), "vector4", "(" + matVector.getX() + ", " + matVector.getY() + ", " + matVector.getZ() + ", " + matVector.getW() + ")");
                         }
-                    } else if (varType.equals(VarType.Texture2D) || varType.equals(VarType.Texture3D))
+                    else if (varType.equals(VarType.Texture2D) || varType.equals(VarType.Texture3D))
                     {
                         //System.out.println("PropertyList - Texture: " + matParam.getName() + " -> " + matParam.getValueAsString());
                         String newValue = matParam.getValueAsString();
@@ -840,24 +772,17 @@ public class ObjectToElementConverter
     public static B3D_CShape convertCollisionShape(CollisionShape collisionShape, Spatial spatial, B3D_Spatial b3D_Spatial)
     {
         if (collisionShape instanceof BoxCollisionShape)
-        {
             return new B3D_BoxShape(((BoxCollisionShape) collisionShape).getHalfExtents());
-        } else if (collisionShape instanceof CapsuleCollisionShape)
-        {
+        else if (collisionShape instanceof CapsuleCollisionShape)
             return new B3D_CapsuleShape(((CapsuleCollisionShape) collisionShape).getRadius(), ((CapsuleCollisionShape) collisionShape).getHeight());
-        } else if (collisionShape instanceof ConeCollisionShape)
-        {
+        else if (collisionShape instanceof ConeCollisionShape)
             return new B3D_ConeShape(((ConeCollisionShape) collisionShape).getRadius(), ((ConeCollisionShape) collisionShape).getHeight());
-        } else if (collisionShape instanceof CylinderCollisionShape)
-        {
+        else if (collisionShape instanceof CylinderCollisionShape)
             return new B3D_CylinderShape(((CylinderCollisionShape) collisionShape).getHalfExtents());
-        } else if (spatial.getUserData("cShape").equals("static"))
-        {
+        else if (spatial.getUserData("cShape").equals("static"))
             return new B3D_StaticMeshShape(b3D_Spatial.getUUID());
-        } else if (spatial.getUserData("cShape").equals("dynamic"))
-        {
+        else if (spatial.getUserData("cShape").equals("dynamic"))
             return new B3D_DynamicMeshShape(b3D_Spatial.getUUID());
-        }
         return null;
     }
 
@@ -865,7 +790,7 @@ public class ObjectToElementConverter
     {
         B3D_MotionEvent b3D_MotionEvent;
         B3D_MotionPath b3D_MotionPath;
-        Object movingObjectUUID;;
+        Object movingObjectUUID;
         UUID b3d_UUID = Wizard.getObjectReferences().getUUID(motionEvent.hashCode());
         Object lookAtObject = ((B3D_MotionEvent) Wizard.getObjects().getB3D_Element(b3d_UUID)).getMotionPath().getLookAtObject();
         ColorRGBA color = ColorRGBA.Green;
@@ -874,16 +799,10 @@ public class ObjectToElementConverter
             int movingSpatialID = motionEvent.getSpatial().hashCode();
             movingObjectUUID = Wizard.getObjectReferences().getUUID(movingSpatialID);
         } else
-        {
             movingObjectUUID = B3D_MotionEvent.Cam.CAM_ID;
-        }
         if (lookAtObject != null)
-        {
             if (lookAtObject.equals("Camera"))
-            {
                 color = ColorRGBA.Gray;
-            }
-        }
         Quaternion rot = null;
         if (motionEvent.getRotation() != null)
             rot = new Quaternion(motionEvent.getRotation());
