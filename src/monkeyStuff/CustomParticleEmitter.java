@@ -36,8 +36,6 @@ import com.jme3.effect.Particle;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh;
 import com.jme3.effect.ParticleMesh.Type;
-import com.jme3.effect.ParticlePointMesh;
-import com.jme3.effect.ParticleTriMesh;
 import com.jme3.effect.influencers.DefaultParticleInfluencer;
 import com.jme3.effect.influencers.ParticleInfluencer;
 import com.jme3.effect.shapes.EmitterPointShape;
@@ -1153,9 +1151,7 @@ public class CustomParticleEmitter extends Geometry
     public void updateFromControl(float tpf)
     {
         if (enabled)
-        {
             this.updateParticleState(tpf);
-        }
     }
 
     /**
