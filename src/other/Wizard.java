@@ -3,10 +3,10 @@ package other;
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.MotionPath;
+import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
-import com.jme3.post.Filter;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.CameraNode;
@@ -32,6 +32,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.UUID;
 import java.util.Vector;
@@ -40,6 +41,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import monkeyStuff.CustomParticleEmitter;
+import monkeyStuff.CustomParticleEmitter.ParticleEmitterControl;
 
 public class Wizard
 {
@@ -58,6 +61,7 @@ public class Wizard
     //Custom Animations
     private static ArrayList<LiveAnimation> activeAnimations = new ArrayList<LiveAnimation>();
     private static SimpleApplication app;
+    private static boolean wire = false;
 
     public synchronized static void updateCustomAnimations(float tpf)
     {
@@ -158,18 +162,30 @@ public class Wizard
             ex.printStackTrace();
         }
     }
+    private static Class currentLowestClass = null;
 
-    public static void completelyCopyValues(Object copyFrom, Object insertIn)
+    public static synchronized void completelyCopyValues(Object copyFrom, Object insertIn)
     {
+        currentLowestClass = copyFrom.getClass();
         completelyCopyValues(copyFrom, insertIn, copyFrom.getClass());
+        if (currentLowestClass.equals(CustomParticleEmitter.class))
+        {
+            //Update Material of ParticleEmitter, but nothing else inside the Geometry
+            Material cfMat = ((CustomParticleEmitter) copyFrom).getMaterial();
+            Material iiMat = ((CustomParticleEmitter) insertIn).getMaterial();
+            copyValues(cfMat, iiMat);
+            iiMat.getAdditionalRenderState().setDepthWrite(cfMat.getAdditionalRenderState().isDepthWrite());
+            iiMat.getAdditionalRenderState().setWireframe(cfMat.getAdditionalRenderState().isWireframe());
+        }
+        currentLowestClass = null;
     }
 
-    public static void copyValues(Object copyFrom, Object insertIn)
+    public static synchronized void copyValues(Object copyFrom, Object insertIn)
     {
         copyValues(copyFrom, insertIn, copyFrom.getClass());
     }
 
-    public static void completelyCopyValues(Object copyFrom, Object insertIn, Class c)
+    public static synchronized void completelyCopyValues(final Object copyFrom, final Object insertIn, final Class c)
     {
         if (c.equals(Object.class))
             return;
@@ -181,12 +197,23 @@ public class Wizard
         }
         if (c.equals(Spatial.class))
             copySpatialValues((Spatial) copyFrom, (Spatial) insertIn);
-        else
-            copyValues(copyFrom, insertIn, c);
+        else if (!(currentLowestClass.equals(CustomParticleEmitter.class) && c.equals(Geometry.class)))
+            if (copyFrom instanceof Spatial)
+                app.enqueue(new Callable<Void>()
+                {
+                    @Override
+                    public Void call() throws Exception
+                    {
+                        copyValues(copyFrom, insertIn, c);
+                        return null;
+                    }
+                });
+            else
+                copyValues(copyFrom, insertIn, c);
         completelyCopyValues(copyFrom, insertIn, c.getSuperclass());
     }
 
-    public static void copySpatialValues(final Spatial copyFrom, final Spatial insertIn)
+    public static synchronized void copySpatialValues(final Spatial copyFrom, final Spatial insertIn)
     {
         app.enqueue(new Callable<Void>()
         {
@@ -198,6 +225,16 @@ public class Wizard
                 insertIn.setLocalScale(new Vector3f(copyFrom.getLocalScale()));
                 insertIn.setName(copyFrom.getName());
                 insertIn.setLocalTranslation(new Vector3f(copyFrom.getLocalTranslation()));
+
+                List<String> keys = new ArrayList<String>();
+                for (String key : insertIn.getUserDataKeys())
+                    keys.add(key);
+                for (String key : keys)
+                    insertIn.setUserData(key, null);
+                for (String key : copyFrom.getUserDataKeys())
+                    insertIn.setUserData(key, copyFrom.getUserData(key));
+
+                setWireframe(insertIn, wire);
                 insertIn.setLocalRotation(new Quaternion(copyFrom.getLocalRotation()));
                 if (copyFrom.getShadowMode().equals(RenderQueue.ShadowMode.Cast))
                     insertIn.setShadowMode(RenderQueue.ShadowMode.Cast);
@@ -209,20 +246,39 @@ public class Wizard
                     insertIn.setShadowMode(RenderQueue.ShadowMode.Off);
                 else
                     insertIn.setShadowMode(RenderQueue.ShadowMode.Receive);
+
+                ArrayList<Control> controls = new ArrayList<Control>();
+                for (int i = 0; i < insertIn.getNumControls(); i++)
+                    controls.add(insertIn.getControl(i));
+                for (Control c : controls)
+                    if (!(c instanceof ParticleEmitterControl))
+                        insertIn.removeControl(c);
                 for (int i = 0; i < copyFrom.getNumControls(); i++)
                 {
-                    try
-                    {
-                        Control ac = copyFrom.getControl(i).getClass().newInstance();
-                        copyValues(ac, copyFrom.getControl(i));
-                        insertIn.addControl(ac);
-                    } catch (InstantiationException ex)
-                    {
-                        ex.printStackTrace();
-                    } catch (IllegalAccessException ex)
-                    {
-                        ex.printStackTrace();
-                    }
+                    if (!(copyFrom.getControl(i) instanceof ParticleEmitterControl))
+                        try
+                        {
+                            insertIn.addControl(copyFrom.getControl(i));
+                        } catch (java.lang.IllegalStateException ise)
+                        {
+                            System.out.println("Control already added");
+                        }
+                    /*try
+                     {
+                     Control ac = copyFrom.getControl(i).getClass().newInstance();
+                     System.out.println("Control: " + ac.getClass() + " -> " + ac);
+                     if (!(ac instanceof ParticleEmitterControl))
+                     {
+                     copyValues(ac, copyFrom.getControl(i));
+                     insertIn.addControl(ac);
+                     }
+                     } catch (InstantiationException ex)
+                     {
+                     ex.printStackTrace();
+                     } catch (IllegalAccessException ex)
+                     {
+                     ex.printStackTrace();
+                     }*/
 
                 }
                 return null;
@@ -231,7 +287,7 @@ public class Wizard
     }
     private static Object ii, cf;
 
-    public static void copyValues(Object copyFrom, Object insertIn, final Class c)
+    public static synchronized void copyValues(Object copyFrom, Object insertIn, final Class c)
     {
         System.out.println("Copy from " + c);
         if (!copyFrom.getClass().equals(insertIn.getClass()))
@@ -251,29 +307,31 @@ public class Wizard
             try
             {
                 f.setAccessible(true);
-                if (!(ii instanceof Filter))
+                /*if (!(ii instanceof Filter))
+                 {
+                 System.out.println("Setting " + f.getName() + " from " + f.get(ii) + " to " + f.get(cf));
+                 f.set(ii, f.get(cf));
+                 }
+                 if (ii instanceof Filter)
+                 {
+                 Filter fii = (Filter) ii;*/
+                String method = "set" + Character.toUpperCase(f.getName().charAt(0)) + f.getName().substring(1);
+                try
                 {
-                    System.out.println("Setting " + f.getName() + " from " + f.get(ii) + " to " + f.get(cf));
-                    f.set(ii, f.get(cf));
-                }
-                if (ii instanceof Filter)
-                {
-                    Filter fii = (Filter) ii;
-                    String method = "set" + Character.toUpperCase(f.getName().charAt(0)) + f.getName().substring(1);
-                    try
+                    if (f.get(cf) != null)
                     {
-                        if (f.get(cf) != null)
-                            c.getMethod(method, f.getType()).invoke(ii, f.get(cf));
-                    } catch (NoSuchMethodException ex)
-                    {
-                        System.out.println("Could not invoke " + method + " (nsme)");
-                    } catch (SecurityException ex)
-                    {
-                        System.out.println("Could not invoke " + method + " (se)");
-                    } catch (InvocationTargetException ex)
-                    {
-                        System.out.println("Could not invoke " + method + " (ite)");
+                        c.getMethod(method, f.getType()).invoke(ii, f.get(cf));
+                        System.out.println("COULD invoke " + method + "()");
                     }
+                } catch (NoSuchMethodException ex)
+                {
+                    System.out.println("Could not invoke " + method + " (nsme)");
+                } catch (SecurityException ex)
+                {
+                    System.out.println("Could not invoke " + method + " (se)");
+                } catch (InvocationTargetException ex)
+                {
+                    System.out.println("Could not invoke " + method + " (ite)");
                 }
             } catch (SecurityException ex)
             {
@@ -416,6 +474,7 @@ public class Wizard
 
     public static void setWireframe(Spatial spatial, boolean wireframeEnabled)
     {
+        wire = wireframeEnabled;
         if (!spatial.getName().equals("Light Scattering Node")
                 && !spatial.getName().equals("Light Node"))
         {
