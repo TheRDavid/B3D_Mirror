@@ -200,18 +200,14 @@ public class WaterFilterWithGetters extends Filter
             }
             renderManager.renderViewPort(reflectionView, tpf);
             if (!rtb)
-            {
                 renderManager.setHandleTranslucentBucket(false);
-            }
             renderManager.setCamera(sceneCam, false);
             renderManager.getRenderer().setFrameBuffer(viewPort.getOutputFrameBuffer());
 
 
             underWater = false;
         } else
-        {
             underWater = true;
-        }
     }
 
     @Override
