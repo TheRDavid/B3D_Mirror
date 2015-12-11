@@ -745,7 +745,10 @@ public class ElementToObjectConverter
         particleEmitter.setGravity(new Vector3f(b3D_ParticleEffect.getGravity()));
         particleEmitter.setHighLife(b3D_ParticleEffect.getHighLife());
         particleEmitter.setImagesX(b3D_ParticleEffect.getImgX());
-        particleEmitter.setFaceNormal(new Vector3f(b3D_ParticleEffect.getFaceNormal()));
+        if (b3D_ParticleEffect.getFaceNormal() == null)
+            particleEmitter.setFaceNormal(null);
+        else
+            particleEmitter.setFaceNormal(new Vector3f(b3D_ParticleEffect.getFaceNormal()));
         particleEmitter.setFacingVelocity(b3D_ParticleEffect.isFaceVelocity());
         particleEmitter.setImagesY(b3D_ParticleEffect.getImgY());
         particleEmitter.setLowLife(b3D_ParticleEffect.getLowLife());
@@ -925,29 +928,20 @@ public class ElementToObjectConverter
         MotionPath motionPath = new MotionPath();
         Spatial spatial;
         if (b3D_MotionEvent.getObjectProbablyUUID().equals(B3D_MotionEvent.Cam.CAM_ID))
-        {
             spatial = Wizard.getCameraNode();
-        } else
-        {
+        else
             spatial = (Spatial) Wizard.getObjects().getOriginalObject(Wizard.getObjectReferences().getID((UUID) b3D_MotionEvent.getObjectProbablyUUID()));
-        }
         for (Vector3f vec3 : b3D_MotionEvent.getMotionPath().getWayPoints())
-        {
             motionPath.addWayPoint(new Vector3f(vec3));
-        }
         motionPath.setCycle(b3D_MotionEvent.getMotionPath().isCycled());
         motionPath.setCurveTension(b3D_MotionEvent.getMotionPath().getCurveTension());
         LoopMode loopMode;
         if (b3D_MotionEvent.getMotionPath().getLoopMode().equals(B3D_MotionPath.LoopMode.Cycle))
-        {
             loopMode = LoopMode.Cycle;
-        } else if (b3D_MotionEvent.getMotionPath().getLoopMode().equals(B3D_MotionPath.LoopMode.DontLoop))
-        {
+        else if (b3D_MotionEvent.getMotionPath().getLoopMode().equals(B3D_MotionPath.LoopMode.DontLoop))
             loopMode = LoopMode.DontLoop;
-        } else
-        {
+        else
             loopMode = LoopMode.Loop;
-        }
         /*
          * Following error happens here: The spatial that is assigned to this MotionEvent is not an Object in the scene!
          * However, it has the correct ID-UserData, just like the Spatial inside the SceneGraph that will not move even though it
@@ -974,36 +968,25 @@ public class ElementToObjectConverter
         MotionEvent motionEvent = new MotionEvent(spatial, motionPath, loopMode);
         motionEvent.setSpeed(b3D_MotionEvent.getMotionPath().getSpeed());
         if (b3D_MotionEvent.getMotionPath().getDirectionType().equals(B3D_MotionPath.DirectionType.LookAt))
-        {
             motionEvent.setDirectionType(MotionEvent.Direction.LookAt);
-        } else if (b3D_MotionEvent.getMotionPath().getDirectionType().equals(B3D_MotionPath.DirectionType.None))
-        {
+        else if (b3D_MotionEvent.getMotionPath().getDirectionType().equals(B3D_MotionPath.DirectionType.None))
             motionEvent.setDirectionType(MotionEvent.Direction.None);
-        } else if (b3D_MotionEvent.getMotionPath().getDirectionType().equals(B3D_MotionPath.DirectionType.Path))
-        {
+        else if (b3D_MotionEvent.getMotionPath().getDirectionType().equals(B3D_MotionPath.DirectionType.Path))
             motionEvent.setDirectionType(MotionEvent.Direction.Path);
-        } else if (b3D_MotionEvent.getMotionPath().getDirectionType().equals(B3D_MotionPath.DirectionType.PathAndRotation))
-        {
+        else if (b3D_MotionEvent.getMotionPath().getDirectionType().equals(B3D_MotionPath.DirectionType.PathAndRotation))
             motionEvent.setDirectionType(MotionEvent.Direction.PathAndRotation);
-        } else
-        {
+        else
             motionEvent.setDirectionType(MotionEvent.Direction.Rotation);
-        }
         if (b3D_MotionEvent.getMotionPath().getRotation() != null)
-        {
             motionEvent.setRotation(new Quaternion(b3D_MotionEvent.getMotionPath().getRotation()));
-        }
         if (b3D_MotionEvent.getMotionPath().getLookAtObject() != null)
-        {
             if (b3D_MotionEvent.getMotionPath().getLookAtObject().equals("Camera"))
-            {
                 motionEvent.setLookAt(Wizard.getCamera().getLocation(), Vector3f.UNIT_Y);
-            } else
+            else
             {
                 UUID uuid = (UUID) b3D_MotionEvent.getMotionPath().getLookAtObject();
                 motionEvent.setLookAt(((Spatial) Wizard.getObjects().getOriginalObject(Wizard.getObjectReferences().getID(uuid))).getWorldTranslation(), Vector3f.UNIT_Y);
             }
-        }
         motionPath.setPathSplineType(Spline.SplineType.CatmullRom);
         return motionEvent;
     }
