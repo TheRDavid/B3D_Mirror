@@ -96,7 +96,6 @@ public abstract class B3D_AnimationCommand extends B3D_Element implements Serial
     {
         if (firstStep)
         {
-            System.out.println("First step");
             firstStep = false;
             saveStartValue(actualObject);
         }
@@ -106,7 +105,6 @@ public abstract class B3D_AnimationCommand extends B3D_Element implements Serial
             remaining -= tpf;
             if (remaining <= tpf * 1.1f)
             {
-                System.out.println("Final step");
                 stepFinal(actualObject);
                 remaining = duration;
                 playing = false;

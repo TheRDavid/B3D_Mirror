@@ -63,8 +63,6 @@ public class B3D_Anim_Move extends B3D_AnimationCommand implements Serializable,
         }
         if (actualObj instanceof Spatial)
         {
-            System.out.println("Final: " + ((Spatial) actualObj).getLocalTranslation());
-            System.out.println("Wanted: " + ((Vector3f) startValue).clone().add((Vector3f) value));
             ((Spatial) actualObj).setLocalTranslation(((Vector3f) startValue).clone().add((Vector3f) value));
         } else if (actualObj instanceof SpotLight)
             ((SpotLight) actualObj).setPosition(((Vector3f) startValue).clone().add((Vector3f) value));
@@ -82,7 +80,6 @@ public class B3D_Anim_Move extends B3D_AnimationCommand implements Serializable,
             startValue = ((SpotLight) actualObject).getPosition().clone();
         else if (actualObject instanceof PointLight)
             startValue = ((PointLight) actualObject).getPosition().clone();
-        System.out.println("Set to: " + startValue);
     }
 
     @Override

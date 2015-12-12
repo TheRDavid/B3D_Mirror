@@ -79,12 +79,10 @@ public class AnimationTranslator
         int start = 0;
         int lastDelim = command.indexOf(":");
         String type = command.substring(start, lastDelim);
-        System.out.println("\t\t" + start + "->" + lastDelim + " Type: " + type);
 
         start = lastDelim;
         lastDelim = command.indexOf(":", start + 1);
         String value = command.substring(start + 1, lastDelim);
-        System.out.println("\t\t" + start + "->" + lastDelim + " Values: " + value);
         String duration = null;
         String exact = "";
 
@@ -94,12 +92,10 @@ public class AnimationTranslator
             start = lastDelim;
             lastDelim = command.indexOf(":", start + 1);
             duration = command.substring(start + 1, lastDelim);
-            System.out.println("\t\t" + start + "->" + lastDelim + " Duration: " + duration);
         }
 
         start = lastDelim;
         String startTime = command.substring(start + 1);
-        System.out.println("\t\t" + start + "->End StartTime: " + startTime);
 
         Object actualObject = Wizard.getObjects().getOriginalObject(Wizard.getObjectReferences().getID(object));
         Object startValue = null;
@@ -147,12 +143,10 @@ public class AnimationTranslator
 
     public static ArrayList<B3D_Animation> parseToLocalAnimations(String script, UUID object)
     {
-        System.out.println("Before: \n" + script);
         ArrayList<B3D_Animation> animations = new ArrayList<B3D_Animation>();
         script = script.replaceAll(" ", "");
         script = script.replaceAll("\n", "");
         script = script.replaceAll("\t", "");
-        System.out.println("After cleaning: " + script);
         StringTokenizer tokenizer = new StringTokenizer(script);
         while (tokenizer.hasMoreTokens())
         {
@@ -160,17 +154,14 @@ public class AnimationTranslator
 
             StringTokenizer nTokenizer = new StringTokenizer(aniString, "{");
             String name = nTokenizer.nextToken("()");
-            System.out.println("Name: " + name);
             B3D_Animation animation = new B3D_Animation(object, name);
             //Parameters
             String parameters = nTokenizer.nextToken("(");
-            System.out.println("Params: " + parameters);
             if (!parameters.startsWith(")"))
             {
                 StringTokenizer pTokenizer = new StringTokenizer(parameters, ",");
                 String iterations = pTokenizer.nextToken();
                 iterations = iterations.substring(0, iterations.indexOf(")"));
-                System.out.println("iterations : " + iterations);
                 if (iterations.equals("loop"))
                     animation.setIterations(B3D_Animation.LOOP);
                 else
@@ -180,7 +171,6 @@ public class AnimationTranslator
             try
             {
                 StringTokenizer cTokenizer = new StringTokenizer(aniString.substring(aniString.indexOf("{") + 1), ";");
-                System.out.println("Commands: " + aniString.substring(aniString.indexOf("{")));
                 while (cTokenizer.hasMoreTokens())
                 {
                     //Skip the {
@@ -188,7 +178,6 @@ public class AnimationTranslator
                     if (!command.contains("}") && command.length() > 0)
                         try
                         {
-                            System.out.println("\tReading command: " + command);
                             animation.getCommands().add(enc(command, object));
                         } catch (Exception e)
                         {

@@ -38,7 +38,6 @@ public class B3D_Anim_Call extends B3D_AnimationCommand
         {
             remaining = 0;
             b3dElements.B3D_Element element = Wizard.getObjects().getB3D_Element(calledObject);
-            System.out.println("Calling " + calledObject.toString() + " to " + animationName);
             element.call(animationName);
         }
     }

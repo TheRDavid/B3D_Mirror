@@ -36,7 +36,6 @@ public class B3D_Anim_FireParticles extends B3D_AnimationCommand
             ObserverDialog.getObserverDialog().printMessage("The Object must be a Particle Emitter!");
             return;
         }
-        System.out.println("Firing: " + value);
         if (!(Boolean) value)
             ((CustomParticleEmitter) actualObject).setFiring(false);
         else

@@ -46,6 +46,6 @@ public abstract class B3D_Filter extends b3dElements.B3D_Element implements Seri
     {
         super.set(e);
         B3D_Filter a = (B3D_Filter) e;
-        Wizard.copyValues(a, this, getClass());
+        Wizard.copyValues(a, this, B3D_Filter.class);
     }
 }

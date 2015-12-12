@@ -65,7 +65,6 @@ public class B3D_Anim_Scale extends B3D_AnimationCommand implements Serializable
             {
                 Vector3f currentScaling = new Vector3f((Vector3f) value);
                 currentScaling.multLocal(tpf / duration);
-                System.out.println("Current Scaling: " + currentScaling);
                 ((Spatial) actualObject).getLocalScale().addLocal(currentScaling.x, currentScaling.y, currentScaling.z);
             } else
             {
@@ -137,7 +136,6 @@ public class B3D_Anim_Scale extends B3D_AnimationCommand implements Serializable
             startValue = ((PointLight) actualObject).getRadius();
         else if (actualObject instanceof SpotLight)
             startValue = ((SpotLight) actualObject).getSpotRange();
-        System.out.println("Set to: " + startValue);
     }
 
     @Override

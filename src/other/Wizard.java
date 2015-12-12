@@ -246,6 +246,7 @@ public class Wizard
                     insertIn.setShadowMode(RenderQueue.ShadowMode.Off);
                 else
                     insertIn.setShadowMode(RenderQueue.ShadowMode.Receive);
+                insertIn.setUserData("adjust", null);
 
                 ArrayList<Control> controls = new ArrayList<Control>();
                 for (int i = 0; i < insertIn.getNumControls(); i++)
@@ -297,7 +298,6 @@ public class Wizard
         }
         ii = insertIn;
         cf = copyFrom;
-        System.out.println("ii: " + ii + "\ncf: " + cf + "\nc: " + c.getName());
         /*app.enqueue(new Callable<Void>()
          {
          @Override
