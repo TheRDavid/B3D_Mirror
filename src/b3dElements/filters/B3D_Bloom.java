@@ -25,7 +25,7 @@ public class B3D_Bloom extends B3D_Filter implements Serializable
             float _downSamplingFactor)
     {
         setName(_name);
-        setFilterIndex(_index);
+        changeFilterIndex(_index);
         intensity = _intensity;
         blurScale = _blurScale;
         exposureCutOff = _exposureCutOff;

@@ -19,7 +19,7 @@ public class B3D_DepthOfField extends B3D_Filter implements Serializable
     public B3D_DepthOfField(String _name, int _index, float _blurScale, float _focusDistance, float _focusRange)
     {
         setName(_name);
-        setFilterIndex(_index);
+        changeFilterIndex(_index);
         blurScale = _blurScale;
         focusDistance = _focusDistance;
         focusRange = _focusRange;

@@ -22,7 +22,7 @@ public class B3D_LightScattering extends B3D_Filter implements Serializable
     public B3D_LightScattering(String _name, int _index, float _blurStart, float _blurWidth, float _density, int _samples, Vector3f _position)
     {
         setName(_name);
-        setFilterIndex(_index);
+        changeFilterIndex(_index);
         blurStart = _blurStart;
         density = _density;
         blurWidth = _blurWidth;

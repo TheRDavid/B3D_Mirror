@@ -19,7 +19,7 @@ public class B3D_FrostedGlass extends B3D_Filter implements Serializable
     public B3D_FrostedGlass(String _name, int _index, float _randomFactor, float _randomScale)
     {
         setName(_name);
-        setFilterIndex(_index);
+        changeFilterIndex(_index);
         randomFactor = _randomFactor;
         randomScale = _randomScale;
     }

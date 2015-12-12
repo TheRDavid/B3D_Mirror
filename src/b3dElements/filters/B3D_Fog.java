@@ -21,7 +21,7 @@ public class B3D_Fog extends B3D_Filter implements Serializable
     public B3D_Fog(String _name, int _index, ColorRGBA _color, float _density, float _distance)
     {
         setName(_name);
-        setFilterIndex(_index);
+        changeFilterIndex(_index);
         color = _color;
         density = _density;
         distance = _distance;

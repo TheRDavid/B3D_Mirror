@@ -64,7 +64,7 @@ public class B3D_Water extends B3D_Filter implements Serializable
             String _normalTexture)
     {
         setName(_name);
-        setFilterIndex(_index);
+        changeFilterIndex(_index);
         causistsTexture = _causistsTexture;
         foamTexture = _foamTexture;
         heightTexture = _heightTexture;

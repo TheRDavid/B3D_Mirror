@@ -20,7 +20,7 @@ public class B3D_Posterization extends B3D_Filter implements Serializable
     public B3D_Posterization(String _name, int _index, float _gamma, float _strength, int _numColors)
     {
         setName(_name);
-        setFilterIndex(_index);
+        changeFilterIndex(_index);
         gamma = _gamma;
         strength = _strength;
         numColors = _numColors;

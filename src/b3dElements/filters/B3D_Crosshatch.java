@@ -31,7 +31,7 @@ public class B3D_Crosshatch extends B3D_Filter implements Serializable
             Float[] _luminanceLevels)
     {
         setName(_name);
-        setFilterIndex(_index);
+        changeFilterIndex(_index);
         lineColor = _lineColor;
         paperColor = _paperColor;
         colorInfluenceLine = _colorInfluenceLine;

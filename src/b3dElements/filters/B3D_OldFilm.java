@@ -20,7 +20,7 @@ public class B3D_OldFilm extends B3D_Filter
     public B3D_OldFilm(String _name, int _index, ColorRGBA _color, float _colorDensity, float _noiseDensity, float _scratchDensity, float _vignetteValue)
     {
         setName(_name);
-        setFilterIndex(_index);
+        changeFilterIndex(_index);
         color = _color;
         colorDensity = _colorDensity;
         noiseDensity = _noiseDensity;

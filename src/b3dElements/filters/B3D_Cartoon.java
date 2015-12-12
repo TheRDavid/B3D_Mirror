@@ -29,7 +29,7 @@ public class B3D_Cartoon extends B3D_Filter implements Serializable
             float _normalTreshold)
     {
         setName(_name);
-        setFilterIndex(_index);
+        changeFilterIndex(_index);
         color = _color;
         depthSensivity = _depthSensivity;
         depthTreshold = _depthTreshold;

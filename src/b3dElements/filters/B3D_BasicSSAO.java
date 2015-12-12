@@ -21,7 +21,7 @@ public class B3D_BasicSSAO extends B3D_Filter
             boolean _useOnlyAO, boolean _useDetailPass, boolean _useDistanceFalloff, boolean _useSmoothing)
     {
         setName(_name);
-        setFilterIndex(_index);
+        changeFilterIndex(_index);
         bias = _bias;
         detailBias = _detailBias;
         detailIntensity = _detailIntensity;

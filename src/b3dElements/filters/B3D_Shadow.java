@@ -38,7 +38,7 @@ public class B3D_Shadow extends B3D_Filter implements Serializable
             int _shadowMapSize)
     {
         setName(_name);
-        setFilterIndex(_filterIndex);
+        changeFilterIndex(_filterIndex);
         lightUUID = _lightUUID;
         lightType = _lightType;
         intensity = _intensity;

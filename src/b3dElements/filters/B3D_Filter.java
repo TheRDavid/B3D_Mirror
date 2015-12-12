@@ -15,7 +15,7 @@ public abstract class B3D_Filter extends b3dElements.B3D_Element implements Seri
         return filterIndex;
     }
 
-    public void setFilterIndex(int filterIndex)
+    public void changeFilterIndex(int filterIndex)
     {
         this.filterIndex = filterIndex;
     }

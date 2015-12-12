@@ -21,7 +21,7 @@ public class B3D_ColorScale extends B3D_Filter
     public B3D_ColorScale(String _name, int _index, float _colorDensity, boolean _multiply, boolean _overlay, ColorRGBA _color)
     {
         setName(_name);
-        setFilterIndex(_index);
+        changeFilterIndex(_index);
         color = _color;
         multiply = _multiply;
         overlay = _overlay;

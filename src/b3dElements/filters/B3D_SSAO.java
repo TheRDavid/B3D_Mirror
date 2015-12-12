@@ -19,7 +19,7 @@ public class B3D_SSAO extends B3D_Filter implements Serializable
     public B3D_SSAO(String _name, int _index, float _sampleRadius, float _bias, float _intensity, float _scale)
     {
         setName(_name);
-        setFilterIndex(_index);
+        changeFilterIndex(_index);
         sampleRadius = _sampleRadius;
         bias = _bias;
         intensity = _intensity;
