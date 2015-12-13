@@ -49,16 +49,20 @@ public class EditorCamera implements AnalogListener, ActionListener
 
     /**
      * Creates a new FlyByCamera to control the given Camera object.
+     *
      * @param cam
      */
     public EditorCamera(Camera cam)
     {
         this.cam = cam;
         initialUpVec = cam.getUp().clone();
+        cam.setLocation(new Vector3f(-20, 5, 0));
+        cam.lookAt(new Vector3f(20, 0, 0), Vector3f.UNIT_Y);
     }
 
     /**
      * Sets the up vector that should be used for the camera.
+     *
      * @param upVec
      */
     public void setUpVector(Vector3f upVec)
@@ -73,6 +77,7 @@ public class EditorCamera implements AnalogListener, ActionListener
 
     /**
      * Sets the move speed. The speed is given in world units per second.
+     *
      * @param moveSpeed
      */
     public void setMoveSpeed(float moveSpeed)
@@ -82,6 +87,7 @@ public class EditorCamera implements AnalogListener, ActionListener
 
     /**
      * Gets the move speed. The speed is given in world units per second.
+     *
      * @return moveSpeed
      */
     public float getMoveSpeed()
@@ -91,6 +97,7 @@ public class EditorCamera implements AnalogListener, ActionListener
 
     /**
      * Sets the rotation speed.
+     *
      * @param rotationSpeed
      */
     public void setRotationSpeed(float rotationSpeed)
@@ -100,6 +107,7 @@ public class EditorCamera implements AnalogListener, ActionListener
 
     /**
      * Gets the move speed. The speed is given in world units per second.
+     *
      * @return rotationSpeed
      */
     public float getRotationSpeed()
@@ -109,7 +117,8 @@ public class EditorCamera implements AnalogListener, ActionListener
 
     /**
      * Sets the zoom speed.
-     * @param zoomSpeed 
+     *
+     * @param zoomSpeed
      */
     public void setZoomSpeed(float zoomSpeed)
     {
@@ -117,8 +126,9 @@ public class EditorCamera implements AnalogListener, ActionListener
     }
 
     /**
-     * Gets the zoom speed.  The speed is a multiplier to increase/decrease
-     * the zoom rate.
+     * Gets the zoom speed. The speed is a multiplier to increase/decrease the
+     * zoom rate.
+     *
      * @return zoomSpeed
      */
     public float getZoomSpeed()
@@ -153,7 +163,7 @@ public class EditorCamera implements AnalogListener, ActionListener
     /**
      * @return If drag to rotate feature is enabled.
      *
-     * @see FlyByCamera#setDragToRotate(boolean) 
+     * @see FlyByCamera#setDragToRotate(boolean)
      */
     public boolean isDragToRotate()
     {
@@ -162,13 +172,12 @@ public class EditorCamera implements AnalogListener, ActionListener
 
     /**
      * Set if drag to rotate mode is enabled.
-     * 
-     * When true, the user must hold the mouse button
-     * and drag over the screen to rotate the camera, and the cursor is
-     * visible until dragged. Otherwise, the cursor is invisible at all times
-     * and holding the mouse button is not needed to rotate the camera.
-     * This feature is disabled by default.
-     * 
+     *
+     * When true, the user must hold the mouse button and drag over the screen
+     * to rotate the camera, and the cursor is visible until dragged. Otherwise,
+     * the cursor is invisible at all times and holding the mouse button is not
+     * needed to rotate the camera. This feature is disabled by default.
+     *
      * @param dragToRotate True if drag to rotate mode is enabled.
      */
     public void setDragToRotate(boolean dragToRotate)
@@ -183,6 +192,7 @@ public class EditorCamera implements AnalogListener, ActionListener
     /**
      * Registers the FlyByCamera to receive input events from the provided
      * Dispatcher.
+     *
      * @param inputManager
      */
     public void registerWithInput(InputManager inputManager)
