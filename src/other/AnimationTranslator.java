@@ -67,7 +67,7 @@ public class AnimationTranslator
         //Some types do not have a duration, they happen & are over in an instant
         if (!type.equals("call") && !type.equals("fireParticles") && !type.equals("playMotion"))
         {
-            dec += value + " : " + anim.getDuration() * 1000 + " : " + anim.getStartTime() * 1000 + ":";
+            dec += value + " : " + anim.getDuration() * 1000 + " : " + anim.getStartTime() * 1000 + ";";
         } else
             dec += value + " : " + anim.getStartTime() * 1000 + ";";
         return dec;

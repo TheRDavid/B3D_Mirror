@@ -55,6 +55,7 @@ public class EditorCamera implements AnalogListener, ActionListener
     public EditorCamera(Camera cam)
     {
         this.cam = cam;
+        setDragToRotate(true);
         initialUpVec = cam.getUp().clone();
         cam.setLocation(new Vector3f(-20, 5, 0));
         cam.lookAt(new Vector3f(20, 0, 0), Vector3f.UNIT_Y);
