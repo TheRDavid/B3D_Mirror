@@ -1,6 +1,6 @@
 package b3dElements;
 
-import b3dElements.animations.B3D_Animation;
+import b3dElements.animations.timedAnimations.B3D_TimedAnimation;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -12,12 +12,12 @@ public class B3D_Element implements Serializable, Cloneable
 {
 
     private UUID uuid = UUID.randomUUID();
-    private ArrayList<B3D_Animation> animations = new ArrayList<B3D_Animation>();
+    private ArrayList<B3D_TimedAnimation> animations = new ArrayList<B3D_TimedAnimation>();
     private String name = "Element";
 
     public void call(String animation)
     {
-        for (final B3D_Animation anim : animations)
+        for (final B3D_TimedAnimation anim : animations)
             if (anim.getName().equals(animation))
             {
                 Wizard.getApp().enqueue(new Callable<Void>()
@@ -44,12 +44,12 @@ public class B3D_Element implements Serializable, Cloneable
         this.name = name;
     }
 
-    public ArrayList<B3D_Animation> getAnimations()
+    public ArrayList<B3D_TimedAnimation> getAnimations()
     {
         return animations;
     }
 
-    public void setAnimations(ArrayList<B3D_Animation> animations)
+    public void setAnimations(ArrayList<B3D_TimedAnimation> animations)
     {
         this.animations = animations;
     }

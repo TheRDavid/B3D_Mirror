@@ -1,7 +1,7 @@
-package b3dElements.animations.animationTypes;
+package b3dElements.animations.timedAnimations.animationTypes;
 
 import b3dElements.B3D_Element;
-import b3dElements.animations.B3D_AnimationCommand;
+import b3dElements.animations.timedAnimations.B3D_AnimationCommand;
 import com.jme3.light.Light;
 import com.jme3.light.PointLight;
 import com.jme3.light.SpotLight;

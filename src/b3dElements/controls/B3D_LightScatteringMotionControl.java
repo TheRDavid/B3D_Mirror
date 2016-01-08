@@ -1,7 +1,7 @@
 package b3dElements.controls;
 
 import b3dElements.B3D_Element;
-import b3dElements.animations.animationTypes.B3D_Anim_Call;
+import b3dElements.animations.timedAnimations.animationTypes.B3D_Anim_Call;
 import java.io.Serializable;
 import java.util.UUID;
 import other.Wizard;

@@ -1,13 +1,13 @@
 package other;
 
-import b3dElements.animations.B3D_Animation;
-import b3dElements.animations.B3D_AnimationCommand;
-import b3dElements.animations.animationTypes.B3D_Anim_Call;
-import b3dElements.animations.animationTypes.B3D_Anim_FireParticles;
-import b3dElements.animations.animationTypes.B3D_Anim_Move;
-import b3dElements.animations.animationTypes.B3D_Anim_PlayMotion;
-import b3dElements.animations.animationTypes.B3D_Anim_Rotate;
-import b3dElements.animations.animationTypes.B3D_Anim_Scale;
+import b3dElements.animations.timedAnimations.B3D_TimedAnimation;
+import b3dElements.animations.timedAnimations.B3D_AnimationCommand;
+import b3dElements.animations.timedAnimations.animationTypes.B3D_Anim_Call;
+import b3dElements.animations.timedAnimations.animationTypes.B3D_Anim_FireParticles;
+import b3dElements.animations.timedAnimations.animationTypes.B3D_Anim_Move;
+import b3dElements.animations.timedAnimations.animationTypes.B3D_Anim_PlayMotion;
+import b3dElements.animations.timedAnimations.animationTypes.B3D_Anim_Rotate;
+import b3dElements.animations.timedAnimations.animationTypes.B3D_Anim_Scale;
 import com.jme3.math.Vector3f;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
@@ -141,9 +141,9 @@ public class AnimationTranslator
         return enc;
     }
 
-    public static ArrayList<B3D_Animation> parseToLocalAnimations(String script, UUID object)
+    public static ArrayList<B3D_TimedAnimation> parseToLocalAnimations(String script, UUID object)
     {
-        ArrayList<B3D_Animation> animations = new ArrayList<B3D_Animation>();
+        ArrayList<B3D_TimedAnimation> animations = new ArrayList<B3D_TimedAnimation>();
         script = script.replaceAll(" ", "");
         script = script.replaceAll("\n", "");
         script = script.replaceAll("\t", "");
@@ -154,7 +154,7 @@ public class AnimationTranslator
 
             StringTokenizer nTokenizer = new StringTokenizer(aniString, "{");
             String name = nTokenizer.nextToken("()");
-            B3D_Animation animation = new B3D_Animation(object, name);
+            B3D_TimedAnimation animation = new B3D_TimedAnimation(object, name);
             //Parameters
             String parameters = nTokenizer.nextToken("(");
             if (!parameters.startsWith(")"))
@@ -163,7 +163,7 @@ public class AnimationTranslator
                 String iterations = pTokenizer.nextToken();
                 iterations = iterations.substring(0, iterations.indexOf(")"));
                 if (iterations.equals("loop"))
-                    animation.setIterations(B3D_Animation.LOOP);
+                    animation.setIterations(B3D_TimedAnimation.LOOP);
                 else
                     animation.setIterations(Integer.parseInt(iterations));
             }
@@ -194,12 +194,12 @@ public class AnimationTranslator
         return animations;
     }
 
-    public static String translate(B3D_Animation animation)
+    public static String translate(B3D_TimedAnimation animation)
     {
         String translation = "#" + animation.getName() + "(";
-        if (animation.getIterations() != B3D_Animation.DEFAULT)
+        if (animation.getIterations() != B3D_TimedAnimation.DEFAULT)
         {
-            if (animation.getIterations() == B3D_Animation.LOOP)
+            if (animation.getIterations() == B3D_TimedAnimation.LOOP)
                 translation += "loop";
             else
                 translation += animation.getIterations();

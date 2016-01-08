@@ -1,4 +1,4 @@
-package b3dElements.animations;
+package b3dElements.animations.timedAnimations;
 
 import b3dElements.B3D_Element;
 import java.io.Serializable;
@@ -10,7 +10,7 @@ import other.Wizard;
  *
  * @author David
  */
-public class B3D_Animation extends B3D_Element implements Serializable, Cloneable
+public class B3D_TimedAnimation extends B3D_Element implements Serializable, Cloneable
 {
 
     private ArrayList<B3D_AnimationCommand> commands = new ArrayList<B3D_AnimationCommand>();
@@ -24,11 +24,11 @@ public class B3D_Animation extends B3D_Element implements Serializable, Cloneabl
     /**
      * Only use when set() is called afterwards
      */
-    public B3D_Animation()
+    public B3D_TimedAnimation()
     {
     }
 
-    public B3D_Animation(UUID obj, String name)
+    public B3D_TimedAnimation(UUID obj, String name)
     {
         this.name = name;
         objectID = obj;
@@ -146,9 +146,9 @@ public class B3D_Animation extends B3D_Element implements Serializable, Cloneabl
         return duration;
     }
 
-    public B3D_Animation copy()
+    public B3D_TimedAnimation copy()
     {
-        B3D_Animation animation = new B3D_Animation(objectID, name);
+        B3D_TimedAnimation animation = new B3D_TimedAnimation(objectID, name);
         animation.setIterations(iterations);
         for (B3D_AnimationCommand command : commands)
         {
@@ -171,7 +171,7 @@ public class B3D_Animation extends B3D_Element implements Serializable, Cloneabl
     public void set(B3D_Element e)
     {
         super.set(e);
-        B3D_Animation a = (B3D_Animation) e;
+        B3D_TimedAnimation a = (B3D_TimedAnimation) e;
         Wizard.copyValues(a, this, getClass());
     }
 }

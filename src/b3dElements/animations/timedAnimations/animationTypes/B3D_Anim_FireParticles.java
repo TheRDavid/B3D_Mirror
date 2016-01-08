@@ -1,8 +1,8 @@
-package b3dElements.animations.animationTypes;
+package b3dElements.animations.timedAnimations.animationTypes;
 
 import b3dElements.B3D_Element;
-import b3dElements.animations.B3D_Animation;
-import b3dElements.animations.B3D_AnimationCommand;
+import b3dElements.animations.timedAnimations.B3D_TimedAnimation;
+import b3dElements.animations.timedAnimations.B3D_AnimationCommand;
 import com.jme3.math.Vector3f;
 import dialogs.ObserverDialog;
 import java.util.UUID;

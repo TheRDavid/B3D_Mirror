@@ -1,6 +1,6 @@
 package other;
 
-import b3dElements.animations.B3D_Animation;
+import b3dElements.animations.timedAnimations.B3D_TimedAnimation;
 
 /**
  *
@@ -9,10 +9,10 @@ import b3dElements.animations.B3D_Animation;
 public class LiveAnimation
 {
 
-    private B3D_Animation animation;
+    private B3D_TimedAnimation animation;
     private Object object;
 
-    public LiveAnimation(B3D_Animation anim)
+    public LiveAnimation(B3D_TimedAnimation anim)
     {
         animation = anim;
         object = Wizard.getObjects().getOriginalObject(Wizard.getObjectReferences().getID(anim.getObject()));
@@ -23,7 +23,7 @@ public class LiveAnimation
         animation.update(tpf, object);
     }
 
-    public B3D_Animation getAnimation()
+    public B3D_TimedAnimation getAnimation()
     {
         return animation;
     }

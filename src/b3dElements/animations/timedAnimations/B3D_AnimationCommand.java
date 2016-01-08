@@ -1,4 +1,4 @@
-package b3dElements.animations;
+package b3dElements.animations.timedAnimations;
 
 import b3dElements.B3D_Element;
 import java.io.Serializable;

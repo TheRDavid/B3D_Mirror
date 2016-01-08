@@ -7,7 +7,7 @@ import monkeyStuff.PointLightShadowFilterWithGetters;
 import monkeyStuff.CustomParticleEmitter;
 import monkeyStuff.ColorScaleFilterWithGetters;
 import b3dElements.B3D_Element;
-import b3dElements.animations.B3D_Animation;
+import b3dElements.animations.timedAnimations.B3D_TimedAnimation;
 import b3dElements.filters.B3D_BasicSSAO;
 import b3dElements.filters.B3D_Bloom;
 import b3dElements.filters.B3D_Cartoon;
@@ -509,7 +509,7 @@ public class ObjectToElementConverter
         if (oldElement != null && convertMode.equals(ConvertMode.SAVING))
         {
             b3D_Spatial.setUuid(oldElement.getUUID());
-            b3D_Spatial.setAnimations((ArrayList<B3D_Animation>) oldElement.getAnimations().clone());
+            b3D_Spatial.setAnimations((ArrayList<B3D_TimedAnimation>) oldElement.getAnimations().clone());
         }
         b3D_Spatial.setScale(new Vector3f(spatial.getLocalScale()));
         b3D_Spatial.setAngles(new Vector3f((Vector3f) spatial.getUserData("angles")));
