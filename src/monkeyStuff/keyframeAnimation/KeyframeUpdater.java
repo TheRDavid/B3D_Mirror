@@ -39,5 +39,11 @@ public abstract class KeyframeUpdater<E>
         return maxFrames;
     }
 
-    protected abstract void setValue(int type, Object value);
+    protected abstract void setValue(String type, Object value);
+
+    void calcValues()
+    {
+        for (KeyframeProperty kfp : keyframeProperties)
+            kfp.calcValues();
+    }
 }

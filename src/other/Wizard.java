@@ -43,6 +43,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import monkeyStuff.CustomParticleEmitter;
 import monkeyStuff.CustomParticleEmitter.ParticleEmitterControl;
+import monkeyStuff.keyframeAnimation.KeyframeAnimation;
 
 public class Wizard
 {
@@ -60,8 +61,15 @@ public class Wizard
     public final static ColorRGBA defaultViewportBackground = new ColorRGBA(0.11f, 0.112f, 0.11f, 1);
     //Custom Animations
     private static ArrayList<LiveAnimation> activeAnimations = new ArrayList<LiveAnimation>();
+    private static ArrayList<KeyframeAnimation> keyframeAnimations = new ArrayList<KeyframeAnimation>();
     private static SimpleApplication app;
     private static boolean wire = false;
+
+    public synchronized static void updateKeyframeAnimations()
+    {
+        for (KeyframeAnimation kfa : keyframeAnimations)
+            kfa.update();
+    }
 
     public synchronized static void updateCustomAnimations(float tpf)
     {
@@ -86,6 +94,11 @@ public class Wizard
     public static ArrayList<LiveAnimation> getActiveAnimations()
     {
         return activeAnimations;
+    }
+
+    public static ArrayList<KeyframeAnimation> getKeyframeAnimations()
+    {
+        return keyframeAnimations;
     }
 
     public static void cleanup()

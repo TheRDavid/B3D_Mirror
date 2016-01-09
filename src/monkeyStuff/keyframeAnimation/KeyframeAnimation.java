@@ -23,6 +23,7 @@ public class KeyframeAnimation
 
     public void addUpdater(KeyframeUpdater kfu)
     {
+        System.out.println("Added Updater: " + kfu);
         updaters.add(kfu);
         calcMaxFrames();
     }
@@ -37,30 +38,38 @@ public class KeyframeAnimation
     public void update()
     {
         if (playing)
+        {
             if (++currentFrame <= maxFrames)
                 for (KeyframeUpdater u : updaters)
+                {
+                    System.out.println(u + " updating");
                     u.update(currentFrame);
+                }
             else
                 playing = false;
+        }
     }
 
-    private void play()
+    public void play()
     {
+        for (KeyframeUpdater updater : updaters)
+            updater.calcValues();
         playing = true;
+        calcMaxFrames();
     }
 
-    private void pause()
+    public void pause()
     {
         playing = false;
     }
 
-    private void stop()
+    public void stop()
     {
         playing = false;
         currentFrame = 0;
     }
 
-    private void jump(int frame)
+    public void jump(int frame)
     {
         currentFrame = frame;
         if (debug)

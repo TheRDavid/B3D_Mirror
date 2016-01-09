@@ -1,6 +1,7 @@
 package monkeyStuff.keyframeAnimation;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 
 /**
  *
@@ -9,15 +10,16 @@ import java.io.Serializable;
 public abstract class KeyframeProperty<E extends Serializable>
 {
 
-    private boolean done = false;
-    private E[] values;
-    public int type;
+    protected boolean done = false;
+    protected E[] values;
+    public String type;
 
-    public KeyframeProperty(int type, int frames, E firstValue, E lastValue) throws Exception
+    public KeyframeProperty(String type, int frames, E firstValue, E lastValue) throws Exception
     {
         if (frames < 2)
             throw new Exception("At least 2 franmes requiered!");
-        values = (E[]) new Object[frames];
+        //values = (E[]) new Object[frames];
+        values = (E[]) Array.newInstance(firstValue.getClass(), frames);
         values[0] = firstValue;
         values[frames - 1] = lastValue;
         this.type = type;
@@ -48,4 +50,6 @@ public abstract class KeyframeProperty<E extends Serializable>
     {
         this.done = done;
     }
+    
+    public abstract void calcValues();
 }

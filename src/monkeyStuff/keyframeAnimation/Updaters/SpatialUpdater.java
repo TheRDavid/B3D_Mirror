@@ -11,7 +11,7 @@ import monkeyStuff.keyframeAnimation.KeyframeUpdater;
 public class SpatialUpdater extends KeyframeUpdater<Spatial>
 {
 
-    public static final int TRANSLATION_TYPE = 0;
+    public static final String TRANSLATION_TYPE = "Translation";
 
     public SpatialUpdater(Spatial object)
     {
@@ -19,9 +19,10 @@ public class SpatialUpdater extends KeyframeUpdater<Spatial>
     }
 
     @Override
-    protected void setValue(int type, Object value)
+    protected void setValue(String type, Object value)
     {
-        if (type == TRANSLATION_TYPE)
+        System.out.println("Setting to "+value);
+        if (type.equals(TRANSLATION_TYPE))
             object.setLocalTranslation((Vector3f) value);
     }
 }
