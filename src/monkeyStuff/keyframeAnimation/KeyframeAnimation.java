@@ -33,29 +33,36 @@ public class KeyframeAnimation
         maxFrames = 0;
         for (KeyframeUpdater u : updaters)
             maxFrames = u.calcMaxFrames() > maxFrames ? u.calcMaxFrames() : maxFrames;
+        System.out.println("Calc Frames: " + maxFrames);
     }
 
     public void update()
     {
         if (playing)
         {
+            System.out.println("Playing " + currentFrame + " -> " + maxFrames);
             if (++currentFrame <= maxFrames)
                 for (KeyframeUpdater u : updaters)
-                {
-                    System.out.println(u + " updating");
                     u.update(currentFrame);
-                }
             else
+            {
                 playing = false;
+                for (KeyframeUpdater u : updaters)
+                {
+                    currentFrame = 0;
+                    u.reset();
+                }
+            }
         }
     }
 
     public void play()
     {
+        System.out.println("Gonna play");
         for (KeyframeUpdater updater : updaters)
             updater.calcValues();
-        playing = true;
         calcMaxFrames();
+        playing = true;
     }
 
     public void pause()
@@ -80,5 +87,10 @@ public class KeyframeAnimation
     public String getName()
     {
         return name;
+    }
+
+    public void removeAllUpdaters()
+    {
+        updaters.clear();
     }
 }

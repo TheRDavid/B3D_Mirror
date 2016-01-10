@@ -11,5 +11,5 @@ package monkeyStuff.keyframeAnimation.Updaters;
 public enum AnimationType
 {
 
-    Translation
+    Translation, Rotation, Scale
 }

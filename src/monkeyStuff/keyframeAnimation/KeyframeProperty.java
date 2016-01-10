@@ -2,6 +2,7 @@ package monkeyStuff.keyframeAnimation;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
+import monkeyStuff.keyframeAnimation.Updaters.AnimationType;
 
 /**
  *
@@ -12,9 +13,9 @@ public abstract class KeyframeProperty<E extends Serializable>
 
     protected boolean done = false;
     protected E[] values;
-    public String type;
+    public AnimationType type;
 
-    public KeyframeProperty(String type, int frames, E firstValue, E lastValue) throws Exception
+    public KeyframeProperty(AnimationType type, int frames, E firstValue, E lastValue) throws Exception
     {
         if (frames < 2)
             throw new Exception("At least 2 franmes requiered!");
@@ -25,8 +26,28 @@ public abstract class KeyframeProperty<E extends Serializable>
         this.type = type;
     }
 
+    public KeyframeProperty(AnimationType type, int frames, E firstValue) throws Exception
+    {
+        if (frames < 2)
+            throw new Exception("At least 2 franmes requiered!");
+        //values = (E[]) new Object[frames];
+        values = (E[]) Array.newInstance(firstValue.getClass(), frames);
+        values[0] = firstValue;
+        values[frames - 1] = firstValue;
+        this.type = type;
+    }
+
     public void setValue(int frame, E value)
     {
+        if (frame >= values.length)
+        {
+            E[] valuesCopy = (E[]) Array.newInstance(values[0].getClass(), values.length);
+            for (int i = 0; i < values.length; i++)
+                valuesCopy[i] = values[i];
+            values = (E[]) Array.newInstance(values[0].getClass(), frame + 1);
+            for (int i = 0; i < valuesCopy.length; i++)
+                values[i] = valuesCopy[i];
+        }
         values[frame] = value;
     }
 
@@ -36,9 +57,11 @@ public abstract class KeyframeProperty<E extends Serializable>
         return values[frame];
     }
 
-    public int getLastFrame()
+    public abstract KeyframeProperty createNew();
+
+    public E[] getValues()
     {
-        return values.length;
+        return values;
     }
 
     public boolean isDone()
@@ -50,6 +73,6 @@ public abstract class KeyframeProperty<E extends Serializable>
     {
         this.done = done;
     }
-    
+
     public abstract void calcValues();
 }

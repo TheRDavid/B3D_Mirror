@@ -5,7 +5,10 @@
 package monkeyStuff.keyframeAnimation.Properties;
 
 import com.jme3.math.Vector3f;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import monkeyStuff.keyframeAnimation.KeyframeProperty;
+import monkeyStuff.keyframeAnimation.Updaters.AnimationType;
 
 /**
  *
@@ -14,41 +17,66 @@ import monkeyStuff.keyframeAnimation.KeyframeProperty;
 public class Vector3fProperty extends KeyframeProperty<Vector3f>
 {
 
-    public Vector3fProperty(String type, int frames, Vector3f firstValue, Vector3f lastValue) throws Exception
+    public Vector3fProperty(AnimationType type, int frames, Vector3f firstValue, Vector3f lastValue) throws Exception
     {
         super(type, frames, firstValue, lastValue);
+    }
+
+    public Vector3fProperty(AnimationType type, int frames, Vector3f value) throws Exception
+    {
+        super(type, frames, value);
     }
 
     @Override
     public void calcValues()
     {
-        boolean done = false;
-        int currentStart = 0;
-        int currentEnd = values.length - 1;
-        while (!done)
+        boolean cDone = false;
+        int cStart = 0;
+        int cEnd;
+        System.out.println("Before:");
+        for (Vector3f v3f : values)
+            System.out.println(v3f);
+        while (!cDone)
         {
-            for (int i = currentStart + 1; i < values.length; i++)
+            for (int i = cStart + 1; i < values.length; i++)
             {
-               // System.out.println("Looping through value at " + i);
+                System.out.println("Looping through value at " + i);
                 if (values[i] != null)
                 {
-                    currentEnd = i;
-                    int inBetween = currentEnd - currentStart;
-                    Vector3f startVector = values[currentStart];
-                    Vector3f endVector = values[currentEnd];
+                    cEnd = i;
+                    int inBetween = cEnd - cStart;
+                    Vector3f startVector = values[cStart];
+                    Vector3f endVector = values[cEnd];
                     Vector3f diffVector = endVector.subtract(startVector).divide(inBetween);
                     //linear
-                    for (int j = currentStart + 1; j < currentEnd; j++)
+                    for (int j = cStart + 1; j < cEnd; j++)
                     {
                         values[j] = values[j - 1].add(diffVector);
-                       // System.out.println("Set " + j + " to " + values[j]);
+                        System.out.println("Set " + j + " to " + values[j]);
                     }
-                    done = currentEnd == values.length - 1;
+                    cStart = cEnd;
+                    cDone = cStart == values.length - 1;
                 }
             }
         }
-       // System.out.println("Values of " + type + ":");
-        //for (Vector3f v3f : values)
-        //    System.out.println(v3f);
+        System.out.println("After:");
+        for (Vector3f v3f : values)
+            System.out.println(v3f);
+    }
+
+    @Override
+    public KeyframeProperty createNew()
+    {
+        try
+        {
+            KeyframeProperty property = new Vector3fProperty(type, values.length, values[0], values[values.length - 1]);
+            for (int i = 1; i < values.length - 1; i++)
+                property.setValue(i, values[i]);
+            return property;
+        } catch (Exception ex)
+        {
+            Logger.getLogger(Vector3fProperty.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 }
