@@ -8,6 +8,7 @@ import com.jme3.math.Quaternion;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import monkeyStuff.keyframeAnimation.KeyframeProperty;
+import monkeyStuff.keyframeAnimation.KeyframeUpdater;
 import monkeyStuff.keyframeAnimation.Updaters.AnimationType;
 
 /**
@@ -17,14 +18,14 @@ import monkeyStuff.keyframeAnimation.Updaters.AnimationType;
 public class QuaternionProperty extends KeyframeProperty<Quaternion>
 {
 
-    public QuaternionProperty(AnimationType type, int frames, Quaternion firstValue, Quaternion lastValue) throws Exception
+    public QuaternionProperty(AnimationType type, int frames, Quaternion firstValue, Quaternion lastValue, KeyframeUpdater kfu) throws Exception
     {
-        super(type, frames, firstValue, lastValue);
+        super(type, frames, firstValue, lastValue, kfu);
     }
 
-    public QuaternionProperty(AnimationType type, int frames, Quaternion firstValue) throws Exception
+    public QuaternionProperty(AnimationType type, int frames, Quaternion firstValue, KeyframeUpdater kfu) throws Exception
     {
-        super(type, frames, firstValue);
+        super(type, frames, firstValue, kfu);
     }
 
     @Override
@@ -65,7 +66,7 @@ public class QuaternionProperty extends KeyframeProperty<Quaternion>
     {
         try
         {
-            KeyframeProperty property = new QuaternionProperty(type, values.length, values[0], values[values.length - 1]);
+            KeyframeProperty property = new QuaternionProperty(type, values.length, values[0], values[values.length - 1], updater);
             for (int i = 1; i < values.length - 1; i++)
                 property.setValue(i, values[i]);
             return property;

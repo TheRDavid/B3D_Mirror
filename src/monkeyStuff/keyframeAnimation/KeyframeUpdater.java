@@ -61,5 +61,10 @@ public abstract class KeyframeUpdater<E>
             kfp.calcValues();
     }
 
+    public E getObject()
+    {
+        return object;
+    }
+
     public abstract KeyframeUpdater createNew();
 }

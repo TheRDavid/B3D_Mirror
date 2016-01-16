@@ -14,11 +14,13 @@ public abstract class KeyframeProperty<E extends Serializable>
     protected boolean done = false;
     protected E[] values;
     public AnimationType type;
+    protected KeyframeUpdater updater;
 
-    public KeyframeProperty(AnimationType type, int frames, E firstValue, E lastValue) throws Exception
+    public KeyframeProperty(AnimationType type, int frames, E firstValue, E lastValue, KeyframeUpdater kfu) throws Exception
     {
         if (frames < 2)
             throw new Exception("At least 2 franmes requiered!");
+        updater = kfu;
         //values = (E[]) new Object[frames];
         values = (E[]) Array.newInstance(firstValue.getClass(), frames);
         values[0] = firstValue;
@@ -26,15 +28,21 @@ public abstract class KeyframeProperty<E extends Serializable>
         this.type = type;
     }
 
-    public KeyframeProperty(AnimationType type, int frames, E firstValue) throws Exception
+    public KeyframeProperty(AnimationType type, int frames, E firstValue, KeyframeUpdater kfu) throws Exception
     {
         if (frames < 2)
             throw new Exception("At least 2 franmes requiered!");
         //values = (E[]) new Object[frames];
+        updater = kfu;
         values = (E[]) Array.newInstance(firstValue.getClass(), frames);
         values[0] = firstValue;
         values[frames - 1] = firstValue;
         this.type = type;
+    }
+
+    public KeyframeUpdater getUpdater()
+    {
+        return updater;
     }
 
     public void setValue(int frame, E value)

@@ -21,6 +21,11 @@ public class KeyframeAnimation
         this.name = name;
     }
 
+    public int getMaxFrames()
+    {
+        return maxFrames;
+    }
+
     public void addUpdater(KeyframeUpdater kfu)
     {
         System.out.println("Added Updater: " + kfu);
@@ -28,7 +33,7 @@ public class KeyframeAnimation
         calcMaxFrames();
     }
 
-    private void calcMaxFrames()
+    public void calcMaxFrames()
     {
         maxFrames = 0;
         for (KeyframeUpdater u : updaters)

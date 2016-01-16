@@ -8,6 +8,7 @@ import com.jme3.math.Vector3f;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import monkeyStuff.keyframeAnimation.KeyframeProperty;
+import monkeyStuff.keyframeAnimation.KeyframeUpdater;
 import monkeyStuff.keyframeAnimation.Updaters.AnimationType;
 
 /**
@@ -17,14 +18,14 @@ import monkeyStuff.keyframeAnimation.Updaters.AnimationType;
 public class Vector3fProperty extends KeyframeProperty<Vector3f>
 {
 
-    public Vector3fProperty(AnimationType type, int frames, Vector3f firstValue, Vector3f lastValue) throws Exception
+    public Vector3fProperty(AnimationType type, int frames, Vector3f firstValue, Vector3f lastValue, KeyframeUpdater kfu) throws Exception
     {
-        super(type, frames, firstValue, lastValue);
+        super(type, frames, firstValue, lastValue, kfu);
     }
 
-    public Vector3fProperty(AnimationType type, int frames, Vector3f value) throws Exception
+    public Vector3fProperty(AnimationType type, int frames, Vector3f value, KeyframeUpdater kfu) throws Exception
     {
-        super(type, frames, value);
+        super(type, frames, value, kfu);
     }
 
     @Override
@@ -69,7 +70,7 @@ public class Vector3fProperty extends KeyframeProperty<Vector3f>
     {
         try
         {
-            KeyframeProperty property = new Vector3fProperty(type, values.length, values[0], values[values.length - 1]);
+            KeyframeProperty property = new Vector3fProperty(type, values.length, values[0], values[values.length - 1], updater);
             for (int i = 1; i < values.length - 1; i++)
                 property.setValue(i, values[i]);
             return property;
