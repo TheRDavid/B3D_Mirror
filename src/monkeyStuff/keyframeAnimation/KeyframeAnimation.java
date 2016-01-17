@@ -62,18 +62,22 @@ public class KeyframeAnimation
         }
     }
 
-    public void play()
+    public void play(boolean fromBeginning)
     {
-        System.out.println("Gonna play");
-        for (KeyframeUpdater updater : updaters)
-            updater.calcValues();
-        calcMaxFrames();
-        playing = true;
-        System.out.println("Playing vals:");
-        for (KeyframeUpdater kfu : updaters)
-            for (KeyframeProperty kfp : (ArrayList<KeyframeProperty>) kfu.getKeyframeProperties())
-                for (Serializable s : kfp.getValues())
-                    System.out.println(s);
+        if (fromBeginning)
+        {
+            System.out.println("Gonna play");
+            for (KeyframeUpdater updater : updaters)
+                updater.calcValues();
+            calcMaxFrames();
+            playing = true;
+            System.out.println("Playing vals:");
+            for (KeyframeUpdater kfu : updaters)
+                for (KeyframeProperty kfp : (ArrayList<KeyframeProperty>) kfu.getKeyframeProperties())
+                    for (Serializable s : kfp.getValues())
+                        System.out.println(s);
+        } else
+            playing = true;
     }
 
     public void pause()
@@ -103,5 +107,15 @@ public class KeyframeAnimation
     public void removeAllUpdaters()
     {
         updaters.clear();
+    }
+
+    public boolean isPlaying()
+    {
+        return playing;
+    }
+
+    public int getCurrentFrame()
+    {
+        return currentFrame;
     }
 }
