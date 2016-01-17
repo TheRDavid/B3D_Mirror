@@ -48,7 +48,7 @@ public class SpatialUpdater extends KeyframeUpdater<Spatial>
     {
         SpatialUpdater updater = new SpatialUpdater(object);
         for (KeyframeProperty kfp : getKeyframeProperties())
-            updater.getKeyframeProperties().add(kfp.createNew());
+            updater.getKeyframeProperties().add(kfp.createNew(updater));
         return updater;
     }
 }

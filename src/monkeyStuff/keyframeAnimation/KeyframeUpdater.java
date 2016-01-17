@@ -1,10 +1,8 @@
 package monkeyStuff.keyframeAnimation;
 
-import com.jme3.scene.Spatial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import monkeyStuff.keyframeAnimation.Updaters.AnimationType;
-import monkeyStuff.keyframeAnimation.Updaters.SpatialUpdater;
 
 /**
  *
@@ -13,7 +11,7 @@ import monkeyStuff.keyframeAnimation.Updaters.SpatialUpdater;
 public abstract class KeyframeUpdater<E>
 {
 
-    private ArrayList<KeyframeProperty> keyframeProperties = new ArrayList<>();
+    private ArrayList<KeyframeProperty> keyframeProperties = new ArrayList<KeyframeProperty>();
     protected E object;
     private int maxFrames;
 

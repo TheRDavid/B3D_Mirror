@@ -1,5 +1,6 @@
 package monkeyStuff.keyframeAnimation;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -68,6 +69,11 @@ public class KeyframeAnimation
             updater.calcValues();
         calcMaxFrames();
         playing = true;
+        System.out.println("Playing vals:");
+        for (KeyframeUpdater kfu : updaters)
+            for (KeyframeProperty kfp : (ArrayList<KeyframeProperty>) kfu.getKeyframeProperties())
+                for (Serializable s : kfp.getValues())
+                    System.out.println(s);
     }
 
     public void pause()

@@ -65,7 +65,7 @@ public abstract class KeyframeProperty<E extends Serializable>
         return values[frame];
     }
 
-    public abstract KeyframeProperty createNew();
+    public abstract KeyframeProperty createNew(KeyframeUpdater kfu);
 
     public E[] getValues()
     {

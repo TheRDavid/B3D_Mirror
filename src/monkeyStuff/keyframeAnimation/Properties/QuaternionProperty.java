@@ -62,11 +62,12 @@ public class QuaternionProperty extends KeyframeProperty<Quaternion>
     }
 
     @Override
-    public KeyframeProperty createNew()
+    public KeyframeProperty createNew(KeyframeUpdater kfu)
     {
         try
         {
-            KeyframeProperty property = new QuaternionProperty(type, values.length, values[0], values[values.length - 1], updater);
+            KeyframeProperty property = new QuaternionProperty(type, values.length,
+                    new Quaternion(values[0]), new Quaternion(values[values.length - 1]), kfu);
             for (int i = 1; i < values.length - 1; i++)
                 property.setValue(i, values[i]);
             return property;
