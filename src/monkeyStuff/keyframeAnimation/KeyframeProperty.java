@@ -67,6 +67,24 @@ public abstract class KeyframeProperty<E extends Serializable>
 
     public abstract KeyframeProperty createNew(KeyframeUpdater kfu);
 
+    protected final void cutValues()
+    {
+        boolean done = false;
+        int index = values.length - 1;
+        while (!done)
+        {
+            if (values[index] != null)
+            {
+                E[] valuesCopy = (E[]) Array.newInstance(values[0].getClass(), index + 1);
+                for (int i = 0; i <= index; i++)
+                    valuesCopy[i] = values[i];
+                values = valuesCopy;
+                done = true;
+            }
+            index--;
+        }
+    }
+
     public E[] getValues()
     {
         return values;

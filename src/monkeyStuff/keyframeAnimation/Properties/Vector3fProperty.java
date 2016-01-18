@@ -68,6 +68,7 @@ public class Vector3fProperty extends KeyframeProperty<Vector3f>
     @Override
     public KeyframeProperty createNew(KeyframeUpdater kfu)
     {
+        cutValues();
         try
         {
             KeyframeProperty property = new Vector3fProperty(type, values.length, new Vector3f(values[0]), new Vector3f(values[values.length - 1]), kfu);

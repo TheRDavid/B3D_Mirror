@@ -118,4 +118,10 @@ public class KeyframeAnimation
     {
         return currentFrame;
     }
+
+    public void goTo(int currentFrame)
+    {
+        for (KeyframeUpdater u : updaters)
+            u.update(currentFrame);
+    }
 }

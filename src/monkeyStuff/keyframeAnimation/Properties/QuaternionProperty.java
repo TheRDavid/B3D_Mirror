@@ -42,7 +42,7 @@ public class QuaternionProperty extends KeyframeProperty<Quaternion>
                 if (values[i] != null)
                 {
                     currentEnd = i;
-                    int inBetween = currentEnd - currentStart;
+                    float inBetween = currentEnd - currentStart;
                     Quaternion startQuaternion = values[currentStart];
                     Quaternion endQuaternion = values[currentEnd];
                     Quaternion diffQuaternion = endQuaternion.subtract(startQuaternion).mult(1 / inBetween);
@@ -64,6 +64,7 @@ public class QuaternionProperty extends KeyframeProperty<Quaternion>
     @Override
     public KeyframeProperty createNew(KeyframeUpdater kfu)
     {
+        cutValues();
         try
         {
             KeyframeProperty property = new QuaternionProperty(type, values.length,
