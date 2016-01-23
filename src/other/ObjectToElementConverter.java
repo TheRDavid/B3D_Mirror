@@ -7,6 +7,10 @@ import monkeyStuff.PointLightShadowFilterWithGetters;
 import monkeyStuff.CustomParticleEmitter;
 import monkeyStuff.ColorScaleFilterWithGetters;
 import b3dElements.B3D_Element;
+import b3dElements.animations.keyframeAnimations.B3D_KeyframeAnimation;
+import b3dElements.animations.keyframeAnimations.B3D_KeyframeProperty;
+import b3dElements.animations.keyframeAnimations.B3D_KeyframeUpdater;
+import b3dElements.animations.keyframeAnimations.UpdaterType;
 import b3dElements.animations.timedAnimations.B3D_TimedAnimation;
 import b3dElements.filters.B3D_BasicSSAO;
 import b3dElements.filters.B3D_Bloom;
@@ -109,6 +113,10 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.Vector;
 import monkeyStuff.LightScatteringMotionControl;
+import monkeyStuff.keyframeAnimation.LiveKeyframeAnimation;
+import monkeyStuff.keyframeAnimation.LiveKeyframeProperty;
+import monkeyStuff.keyframeAnimation.LiveKeyframeUpdater;
+import monkeyStuff.keyframeAnimation.Updaters.LiveSpatialUpdater;
 
 public class ObjectToElementConverter
 {
@@ -135,7 +143,44 @@ public class ObjectToElementConverter
             element = convertMotionEvent((MotionEvent) object);
         else if (object instanceof Material)
             element = convertMaterial((Material) object);
+        else if (object instanceof LiveKeyframeAnimation)
+            element = convertKeyframeAnimation((LiveKeyframeAnimation) object);
         return element;
+    }
+
+    public static B3D_KeyframeAnimation convertKeyframeAnimation(LiveKeyframeAnimation lka)
+    {
+        B3D_KeyframeAnimation elementAnimation = new B3D_KeyframeAnimation(lka.getName());
+        for (LiveKeyframeUpdater lku : lka.getUpdaters())
+            elementAnimation.getUpdaters().add(convertKeyframeUpdater(lku));
+        return elementAnimation;
+    }
+
+    private static B3D_KeyframeUpdater convertKeyframeUpdater(LiveKeyframeUpdater lku)
+    {
+        UUID uuid = Wizard.getObjectReferences().getUUID(lku.getObject().hashCode());
+        UpdaterType type = null;
+        if (lku instanceof LiveSpatialUpdater)
+            type = UpdaterType.Spatial;
+        B3D_KeyframeUpdater updaterElement = new B3D_KeyframeUpdater(uuid);
+        for (Object lkp : lku.getKeyframeProperties())
+            updaterElement.getKeyframeProperties().add(convertKeyframeProperty((LiveKeyframeProperty) lkp));
+        return updaterElement;
+    }
+
+    private static B3D_KeyframeProperty convertKeyframeProperty(LiveKeyframeProperty lkp)
+    {
+        B3D_KeyframeProperty propertyElement;
+        try
+        {
+            propertyElement = new B3D_KeyframeProperty(lkp.type, lkp.getValues());
+            propertyElement.setIndices(new ArrayList<Integer>(lkp.getIndices()));
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+            return null;
+        }
+        return propertyElement;
     }
 
     public static B3D_Filter convertFilter(Filter filter, int filterIndex)

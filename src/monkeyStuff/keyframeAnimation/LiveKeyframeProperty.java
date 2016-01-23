@@ -2,21 +2,23 @@ package monkeyStuff.keyframeAnimation;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
-import monkeyStuff.keyframeAnimation.Updaters.AnimationType;
+import b3dElements.animations.keyframeAnimations.AnimationType;
+import java.util.ArrayList;
 
 /**
  *
  * @author David
  */
-public abstract class KeyframeProperty<E extends Serializable>
+public abstract class LiveKeyframeProperty<E extends Serializable>
 {
 
     protected boolean done = false;
     protected E[] values;
     public AnimationType type;
-    protected KeyframeUpdater updater;
+    protected LiveKeyframeUpdater updater;
+    private ArrayList<Integer> indices = new ArrayList<>();
 
-    public KeyframeProperty(AnimationType type, int frames, E firstValue, E lastValue, KeyframeUpdater kfu) throws Exception
+    public LiveKeyframeProperty(AnimationType type, int frames, E firstValue, E lastValue, LiveKeyframeUpdater kfu) throws Exception
     {
         if (frames < 2)
             throw new Exception("At least 2 franmes requiered!");
@@ -28,7 +30,7 @@ public abstract class KeyframeProperty<E extends Serializable>
         this.type = type;
     }
 
-    public KeyframeProperty(AnimationType type, int frames, E firstValue, KeyframeUpdater kfu) throws Exception
+    public LiveKeyframeProperty(AnimationType type, int frames, E firstValue, LiveKeyframeUpdater kfu) throws Exception
     {
         if (frames < 2)
             throw new Exception("At least 2 franmes requiered!");
@@ -40,9 +42,16 @@ public abstract class KeyframeProperty<E extends Serializable>
         this.type = type;
     }
 
-    public KeyframeUpdater getUpdater()
+    public LiveKeyframeUpdater getUpdater()
     {
         return updater;
+    }
+
+    public final void storeIndexes()
+    {
+        for (int i = 0; i < values.length; i++)
+            if (values[i] != null)
+                indices.add(i);
     }
 
     public void setValue(int frame, E value)
@@ -65,7 +74,7 @@ public abstract class KeyframeProperty<E extends Serializable>
         return values[frame];
     }
 
-    public abstract KeyframeProperty createNew(KeyframeUpdater kfu);
+    public abstract LiveKeyframeProperty createNew(LiveKeyframeUpdater kfu);
 
     protected final void cutValues()
     {
@@ -101,4 +110,30 @@ public abstract class KeyframeProperty<E extends Serializable>
     }
 
     public abstract void calcValues();
+
+    public int numKeyframes()
+    {
+        int numKeyframes = 0;
+        for (int i = 0; i < values.length; i++)
+            if (values[i] != null)
+                numKeyframes++;
+        return numKeyframes;
+    }
+
+    public ArrayList<Integer> getIndices()
+    {
+        return indices;
+    }
+
+    public void setIndices(ArrayList<Integer> indices)
+    {
+        this.indices = indices;
+    }
+
+    public final void uncalcValues()
+    {
+        for (int i = 0; i < values.length-1; i++)
+            if (!indices.contains(i)) // should be optimized... but probably won't, since it's not realtime
+                values[i] = null;
+    }
 }

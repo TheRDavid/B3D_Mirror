@@ -1,20 +1,21 @@
 package monkeyStuff.keyframeAnimation.Updaters;
 
+import b3dElements.animations.keyframeAnimations.AnimationType;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import java.io.Serializable;
-import monkeyStuff.keyframeAnimation.KeyframeProperty;
-import monkeyStuff.keyframeAnimation.KeyframeUpdater;
+import monkeyStuff.keyframeAnimation.LiveKeyframeProperty;
+import monkeyStuff.keyframeAnimation.LiveKeyframeUpdater;
 
 /**
  *
  * @author David
  */
-public class SpatialUpdater extends KeyframeUpdater<Spatial>
+public class LiveSpatialUpdater extends LiveKeyframeUpdater<Spatial>
 {
 
-    public SpatialUpdater(Spatial object)
+    public LiveSpatialUpdater(Spatial object)
     {
         super(object);
     }
@@ -22,12 +23,13 @@ public class SpatialUpdater extends KeyframeUpdater<Spatial>
     @Override
     protected void setValue(AnimationType type, Object value)
     {
-        System.out.println("Setting to " + value);
         if (type.equals(AnimationType.Translation))
             object.setLocalTranslation((Vector3f) value);
         else if (type.equals(AnimationType.Rotation))
+        {
+           // System.out.println("Setting to " + value);
             object.setLocalRotation((Quaternion) value);
-        else if (type.equals(AnimationType.Scale))
+        } else if (type.equals(AnimationType.Scale))
             object.setLocalScale((Vector3f) value);
     }
 
@@ -44,10 +46,10 @@ public class SpatialUpdater extends KeyframeUpdater<Spatial>
     }
 
     @Override
-    public KeyframeUpdater createNew()
+    public LiveKeyframeUpdater createNew()
     {
-        SpatialUpdater updater = new SpatialUpdater(object);
-        for (KeyframeProperty kfp : getKeyframeProperties())
+        LiveSpatialUpdater updater = new LiveSpatialUpdater(object);
+        for (LiveKeyframeProperty kfp : getKeyframeProperties())
             updater.getKeyframeProperties().add(kfp.createNew(updater));
         return updater;
     }

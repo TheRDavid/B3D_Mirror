@@ -7,6 +7,12 @@ import monkeyStuff.PointLightShadowFilterWithGetters;
 import monkeyStuff.CustomParticleEmitter;
 import monkeyStuff.ColorScaleFilterWithGetters;
 import b3dElements.B3D_Element;
+import b3dElements.animations.keyframeAnimations.AnimationType;
+import b3dElements.animations.keyframeAnimations.B3D_KeyframeAnimation;
+import b3dElements.animations.keyframeAnimations.B3D_KeyframeProperty;
+import b3dElements.animations.keyframeAnimations.B3D_KeyframeUpdater;
+import b3dElements.animations.keyframeAnimations.Properties.QuaternionProperty;
+import b3dElements.animations.keyframeAnimations.Properties.Vector3fProperty;
 import b3dElements.controls.B3D_Control;
 import b3dElements.filters.B3D_BasicSSAO;
 import b3dElements.filters.B3D_Bloom;
@@ -119,11 +125,18 @@ import com.shaderblow.filter.basicssao.BasicSSAO;
 import com.shaderblow.filter.frostedglass.FrostedGlassFilter;
 import com.shaderblow.filter.oldfilm.OldFilmFilter;
 import com.simsilica.lemur.geom.MBox;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.UUID;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import monkeyStuff.LightScatteringMotionControl;
+import monkeyStuff.keyframeAnimation.LiveKeyframeAnimation;
+import monkeyStuff.keyframeAnimation.LiveKeyframeProperty;
+import monkeyStuff.keyframeAnimation.LiveKeyframeUpdater;
+import monkeyStuff.keyframeAnimation.Updaters.LiveSpatialUpdater;
 
 public class ElementToObjectConverter
 {
@@ -146,6 +159,9 @@ public class ElementToObjectConverter
         } else if (element instanceof B3D_Material)
         {
             object = convertMaterial((B3D_Material) element);
+        } else if (element instanceof B3D_KeyframeAnimation)
+        {
+            object = convertKeyframeAnimation((B3D_KeyframeAnimation) element);
         }
         return object;
     }
@@ -1020,5 +1036,72 @@ public class ElementToObjectConverter
         terrain.setMaterial(convertMaterial(b3d_HeightmapLink.getMaterial()));
         terrain.setUserData("heightmapLink", b3d_HeightmapLink.getPath());
         return terrain;
+    }
+
+    public static LiveKeyframeAnimation convertKeyframeAnimation(B3D_KeyframeAnimation animationElement)
+    {
+        LiveKeyframeAnimation lka = new LiveKeyframeAnimation(animationElement.getName());
+        for (B3D_KeyframeUpdater updaterElement : animationElement.getUpdaters())
+            lka.addUpdater(convertKeyframeUpdater(updaterElement));
+        return lka;
+    }
+
+    private static LiveKeyframeUpdater convertKeyframeUpdater(B3D_KeyframeUpdater updaterElement)
+    {
+        Object object = Wizard.getObjects().getOriginalObject(Wizard.getObjectReferences().getID(updaterElement.getObjectID()));
+        LiveKeyframeUpdater updater = null;
+        if (object instanceof Spatial)
+            updater = new LiveSpatialUpdater((Spatial) object);
+        for (Object keyframeProperty : updaterElement.getKeyframeProperties())
+            updater.getKeyframeProperties().add(convertKeyframeProperty((B3D_KeyframeProperty) keyframeProperty, updater));
+        return updater;
+    }
+
+    private static LiveKeyframeProperty convertKeyframeProperty(B3D_KeyframeProperty keyframeProperty, LiveKeyframeUpdater updater)
+    {
+        LiveKeyframeProperty lkp = null;
+        if (keyframeProperty.type.equals(AnimationType.Scale) || keyframeProperty.type.equals(AnimationType.Translation))
+        {
+            Vector3f[] vecVals = (Vector3f[]) keyframeProperty.getValues();
+            try
+            {
+                lkp = new Vector3fProperty(
+                        keyframeProperty.type,
+                        vecVals.length,
+                        vecVals[0],
+                        vecVals[vecVals.length - 1],
+                        updater);
+            } catch (Exception ex)
+            {
+                Logger.getLogger(ElementToObjectConverter.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
+            }
+        } else if (keyframeProperty.type.equals(AnimationType.Rotation))
+        {
+            Quaternion[] quatVals = (Quaternion[]) keyframeProperty.getValues();
+            try
+            {
+                lkp = new QuaternionProperty(
+                        keyframeProperty.type,
+                        quatVals.length,
+                        quatVals[0],
+                        quatVals[quatVals.length - 1],
+                        updater);
+            } catch (Exception ex)
+            {
+                Logger.getLogger(ElementToObjectConverter.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
+            }
+        }
+        //For all
+        System.out.println("lkp: " + lkp);
+        System.out.println("kfp: " + keyframeProperty);
+        for (int i = 1; i < keyframeProperty.getValues().length - 1; i++)
+        {
+            lkp.getValues()[i] = keyframeProperty.getValues()[i];
+        }
+        lkp.setIndices(new ArrayList<Integer>(keyframeProperty.getIndices()));
+        lkp.uncalcValues();
+        return lkp;
     }
 }
