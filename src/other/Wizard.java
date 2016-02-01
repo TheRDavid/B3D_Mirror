@@ -615,4 +615,17 @@ public class Wizard
     {
         return objectReferences;
     }
+
+    public static int actualNumChildren(Node parent)
+    {
+        int num = 0;
+        for (Spatial child : parent.getChildren())
+            if (child.getUserData("modelChild") == null)
+            {
+                num++;
+                if (child instanceof Node)
+                    num += actualNumChildren((Node) child);
+            }
+        return num;
+    }
 }

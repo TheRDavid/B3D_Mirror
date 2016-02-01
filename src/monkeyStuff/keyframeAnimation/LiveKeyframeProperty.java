@@ -76,7 +76,7 @@ public abstract class LiveKeyframeProperty<E extends Serializable>
 
     public abstract LiveKeyframeProperty createNew(LiveKeyframeUpdater kfu);
 
-    protected final void cutValues()
+    public final void cutValues()
     {
         boolean done = false;
         int index = values.length - 1;

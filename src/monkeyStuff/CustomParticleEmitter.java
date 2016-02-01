@@ -774,7 +774,7 @@ public class CustomParticleEmitter extends Geometry
     public void setParticlesPerSec(float particlesPerSec)
     {
         this.particlesPerSec = particlesPerSec;
-        timeDifference = 0;
+        //timeDifference = 0;
     }
 
     /**
