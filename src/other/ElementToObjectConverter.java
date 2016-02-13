@@ -11,6 +11,9 @@ import b3dElements.animations.keyframeAnimations.AnimationType;
 import b3dElements.animations.keyframeAnimations.B3D_KeyframeAnimation;
 import b3dElements.animations.keyframeAnimations.B3D_KeyframeProperty;
 import b3dElements.animations.keyframeAnimations.B3D_KeyframeUpdater;
+import b3dElements.animations.keyframeAnimations.Properties.BoolProperty;
+import b3dElements.animations.keyframeAnimations.Properties.ColorRGBAProperty;
+import b3dElements.animations.keyframeAnimations.Properties.IntProperty;
 import b3dElements.animations.keyframeAnimations.Properties.QuaternionProperty;
 import b3dElements.animations.keyframeAnimations.Properties.Vector3fProperty;
 import b3dElements.controls.B3D_Control;
@@ -136,6 +139,7 @@ import monkeyStuff.LightScatteringMotionControl;
 import monkeyStuff.keyframeAnimation.LiveKeyframeAnimation;
 import monkeyStuff.keyframeAnimation.LiveKeyframeProperty;
 import monkeyStuff.keyframeAnimation.LiveKeyframeUpdater;
+import monkeyStuff.keyframeAnimation.Updaters.LiveParticleEmitterUpdater;
 import monkeyStuff.keyframeAnimation.Updaters.LiveSpatialUpdater;
 
 public class ElementToObjectConverter
@@ -1050,7 +1054,9 @@ public class ElementToObjectConverter
     {
         Object object = Wizard.getObjects().getOriginalObject(Wizard.getObjectReferences().getID(updaterElement.getObjectID()));
         LiveKeyframeUpdater updater = null;
-        if (object instanceof Spatial)
+        if (object instanceof CustomParticleEmitter)
+            updater = new LiveParticleEmitterUpdater((CustomParticleEmitter) object);
+        else if (object instanceof Spatial)
             updater = new LiveSpatialUpdater((Spatial) object);
         for (Object keyframeProperty : updaterElement.getKeyframeProperties())
             updater.getKeyframeProperties().add(convertKeyframeProperty((B3D_KeyframeProperty) keyframeProperty, updater));
@@ -1086,6 +1092,54 @@ public class ElementToObjectConverter
                         quatVals.length,
                         quatVals[0],
                         quatVals[quatVals.length - 1],
+                        updater);
+            } catch (Exception ex)
+            {
+                Logger.getLogger(ElementToObjectConverter.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
+            }
+        } else if (keyframeProperty.type.equals(AnimationType.Particles_Per_Second))
+        {
+            Integer[] intVals = (Integer[]) keyframeProperty.getValues();
+            try
+            {
+                lkp = new IntProperty(
+                        keyframeProperty.type,
+                        intVals.length,
+                        intVals[0],
+                        intVals[intVals.length - 1],
+                        updater);
+            } catch (Exception ex)
+            {
+                Logger.getLogger(ElementToObjectConverter.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
+            }
+        } else if (keyframeProperty.type.equals(AnimationType.Particles_Frozen) || keyframeProperty.type.equals(AnimationType.Particles_Emit_All))
+        {
+            Boolean[] boolVals = (Boolean[]) keyframeProperty.getValues();
+            try
+            {
+                lkp = new BoolProperty(
+                        keyframeProperty.type,
+                        boolVals.length,
+                        boolVals[0],
+                        boolVals[boolVals.length - 1],
+                        updater);
+            } catch (Exception ex)
+            {
+                Logger.getLogger(ElementToObjectConverter.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
+            }
+        } else if (keyframeProperty.type.equals(AnimationType.Particles_End_Color) || keyframeProperty.type.equals(AnimationType.Particles_Start_Color))
+        {
+            ColorRGBA[] boolVals = (ColorRGBA[]) keyframeProperty.getValues();
+            try
+            {
+                lkp = new ColorRGBAProperty(
+                        keyframeProperty.type,
+                        boolVals.length,
+                        boolVals[0],
+                        boolVals[boolVals.length - 1],
                         updater);
             } catch (Exception ex)
             {

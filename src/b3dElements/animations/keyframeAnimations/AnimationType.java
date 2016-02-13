@@ -12,9 +12,17 @@ import java.io.Serializable;
  */
 public enum AnimationType implements Serializable
 {
+    // Spatial
 
-    Translation, Rotation, Scale, // Spatial
-    Frozen, Particles_Per_Second;                                                //Particle Emitter
+    Translation, //Vector3f
+    Rotation, //Quaternion
+    Scale, // Vector3f
+    //Particle Emitter
+    Particles_Frozen, //boolean
+    Particles_Per_Second, //int 
+    Particles_Emit_All, // boolean 
+    Particles_Start_Color, // ColorRGBA 
+    Particles_End_Color; // ColorRGBA 
 
     public static AnimationType valueOfString(String s)
     {

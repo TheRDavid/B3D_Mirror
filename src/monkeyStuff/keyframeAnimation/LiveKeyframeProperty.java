@@ -37,6 +37,7 @@ public abstract class LiveKeyframeProperty<E extends Serializable>
         //values = (E[]) new Object[frames];
         updater = kfu;
         values = (E[]) Array.newInstance(firstValue.getClass(), frames);
+        System.out.println("setze [0] auf "+firstValue);
         values[0] = firstValue;
         values[frames - 1] = firstValue;
         this.type = type;
@@ -84,6 +85,11 @@ public abstract class LiveKeyframeProperty<E extends Serializable>
         {
             if (values[index] != null)
             {
+                System.out.println("E: "+values.getClass().getName());
+                System.out.println("values[index]: "+values[index]);
+                System.out.println("values[0]: "+values[0]);
+                System.out.println("values[0].getClass: "+values[0].getClass());
+                System.out.println("index: "+index);
                 E[] valuesCopy = (E[]) Array.newInstance(values[0].getClass(), index + 1);
                 for (int i = 0; i <= index; i++)
                     valuesCopy[i] = values[i];
@@ -132,7 +138,7 @@ public abstract class LiveKeyframeProperty<E extends Serializable>
 
     public final void uncalcValues()
     {
-        for (int i = 0; i < values.length-1; i++)
+        for (int i = 1; i < values.length-1; i++)
             if (!indices.contains(i)) // should be optimized... but probably won't, since it's not realtime
                 values[i] = null;
     }

@@ -10,7 +10,6 @@ import b3dElements.B3D_Element;
 import b3dElements.animations.keyframeAnimations.B3D_KeyframeAnimation;
 import b3dElements.animations.keyframeAnimations.B3D_KeyframeProperty;
 import b3dElements.animations.keyframeAnimations.B3D_KeyframeUpdater;
-import b3dElements.animations.keyframeAnimations.UpdaterType;
 import b3dElements.animations.timedAnimations.B3D_TimedAnimation;
 import b3dElements.filters.B3D_BasicSSAO;
 import b3dElements.filters.B3D_Bloom;
@@ -116,7 +115,6 @@ import monkeyStuff.LightScatteringMotionControl;
 import monkeyStuff.keyframeAnimation.LiveKeyframeAnimation;
 import monkeyStuff.keyframeAnimation.LiveKeyframeProperty;
 import monkeyStuff.keyframeAnimation.LiveKeyframeUpdater;
-import monkeyStuff.keyframeAnimation.Updaters.LiveSpatialUpdater;
 
 public class ObjectToElementConverter
 {
@@ -159,9 +157,6 @@ public class ObjectToElementConverter
     private static B3D_KeyframeUpdater convertKeyframeUpdater(LiveKeyframeUpdater lku)
     {
         UUID uuid = Wizard.getObjectReferences().getUUID(lku.getObject().hashCode());
-        UpdaterType type = null;
-        if (lku instanceof LiveSpatialUpdater)
-            type = UpdaterType.Spatial;
         B3D_KeyframeUpdater updaterElement = new B3D_KeyframeUpdater(uuid);
         for (Object lkp : lku.getKeyframeProperties())
             updaterElement.getKeyframeProperties().add(convertKeyframeProperty((LiveKeyframeProperty) lkp));

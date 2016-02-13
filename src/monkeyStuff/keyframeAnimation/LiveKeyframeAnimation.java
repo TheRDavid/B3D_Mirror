@@ -1,7 +1,5 @@
 package monkeyStuff.keyframeAnimation;
 
-import b3dElements.animations.keyframeAnimations.AnimationType;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -45,10 +43,12 @@ public class LiveKeyframeAnimation
     {
         if (playing)
         {
-            if (++currentFrame <= maxFrames)
+            if (currentFrame < maxFrames)
+            {
                 for (LiveKeyframeUpdater u : updaters)
                     u.update(currentFrame);
-            else
+                currentFrame++;
+            } else
             {
                 playing = false;
                 for (LiveKeyframeUpdater u : updaters)
@@ -64,18 +64,23 @@ public class LiveKeyframeAnimation
     {
         if (fromBeginning)
         {
-            for (LiveKeyframeUpdater updater : updaters)
-                updater.calcValues();
-            calcMaxFrames();
+            calcValues();
             playing = true;
-           /* System.out.println("Playing with values:");
-            for (LiveKeyframeUpdater kfu : updaters)
-                for (LiveKeyframeProperty kfp : (ArrayList<LiveKeyframeProperty>) kfu.getKeyframeProperties())
-                    if (kfp.type.equals(AnimationType.Rotation))
-                        for (Serializable s : kfp.getValues())
-                            System.out.println(s);*/
+            /* System.out.println("Playing with values:");
+             for (LiveKeyframeUpdater kfu : updaters)
+             for (LiveKeyframeProperty kfp : (ArrayList<LiveKeyframeProperty>) kfu.getKeyframeProperties())
+             if (kfp.type.equals(AnimationType.Rotation))
+             for (Serializable s : kfp.getValues())
+             System.out.println(s);*/
         } else
             playing = true;
+    }
+
+    public void calcValues()
+    {
+        for (LiveKeyframeUpdater updater : updaters)
+            updater.calcValues();
+        calcMaxFrames();
     }
 
     public void pause()
