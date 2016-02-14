@@ -5,6 +5,7 @@ import com.jme3.material.Material;
 import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
+import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -19,13 +20,13 @@ import other.Wizard;
 public class Gizmo extends Node
 {
 
-    private Spatial xArrow;
-    private Spatial yArrow;
-    private Spatial zArrow;
+    private Node xArrow;
+    private Node yArrow;
+    private Node zArrow;
     private Material xArrowMaterial;
     private Material yArrowMaterial;
     private Material zArrowMaterial;
-    private Spatial selectedArrow = null;
+    private Node selectedArrow = null;
     private float incFactor = 1.5f;
 
     public enum Arrow
@@ -37,14 +38,14 @@ public class Gizmo extends Node
     public Gizmo(AssetManager asm)
     {
         setName("Arrows");
-        xArrow = asm.loadModel("Models/arrow.j3o");
+        xArrow = (Node) asm.loadModel("Models/arrowNew.j3o");
         xArrow.setName("xArrow");
-        xArrow.rotate(0, 0, FastMath.DEG_TO_RAD * 90);
+        xArrow.rotate(0, FastMath.DEG_TO_RAD * 180, FastMath.DEG_TO_RAD * 90);
         xArrow.setQueueBucket(RenderQueue.Bucket.Transparent);
-        yArrow = asm.loadModel("Models/arrow.j3o");
+        yArrow = (Node) asm.loadModel("Models/arrowNew.j3o");
         yArrow.setName("yArrow");
         yArrow.setQueueBucket(RenderQueue.Bucket.Transparent);
-        zArrow = asm.loadModel("Models/arrow.j3o");
+        zArrow = (Node) asm.loadModel("Models/arrowNew.j3o");
         zArrow.setName("zArrow");
         zArrow.rotate(FastMath.DEG_TO_RAD * 90, 0, 0);
         zArrow.setQueueBucket(RenderQueue.Bucket.Transparent);
@@ -71,22 +72,22 @@ public class Gizmo extends Node
         attachChild(zArrow);
     }
 
-    public Spatial getxArrow()
+    public Node getxArrow()
     {
         return xArrow;
     }
 
-    public Spatial getyArrow()
+    public Node getyArrow()
     {
         return yArrow;
     }
 
-    public Spatial getzArrow()
+    public Node getzArrow()
     {
         return zArrow;
     }
 
-    public Spatial getSelectedArrow()
+    public Node getSelectedArrow()
     {
         return selectedArrow;
     }

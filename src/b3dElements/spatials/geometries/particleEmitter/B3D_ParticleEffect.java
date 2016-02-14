@@ -20,7 +20,7 @@ public class B3D_ParticleEffect extends B3D_Geometry implements Serializable
     private float startSize, endSize, directionVariation, highLife, lowLife, rotateSpeed, particlesPerSecond;
     private int imgX, imgY, maxParticles;
     private ColorRGBA startColor, endColor;
-    private boolean depthWrite, faceVelocity, firing;
+    private boolean depthWrite, faceVelocity, firing, frozen;
     private Type type;
     private String textureName;
 
@@ -52,6 +52,7 @@ public class B3D_ParticleEffect extends B3D_Geometry implements Serializable
             boolean _faceVelocity,
             Vector3f _faceNormal,
             boolean _firing,
+            boolean _frozen,
             Type _type,
             String _shadowMode)
     {
@@ -77,7 +78,18 @@ public class B3D_ParticleEffect extends B3D_Geometry implements Serializable
         maxParticles = _maxParticles;
         particlesPerSecond = _particlesPerSecond;
         type = _type;
+        frozen = _frozen;
         setShadowMode(_shadowMode);
+    }
+
+    public boolean isFrozen()
+    {
+        return frozen;
+    }
+
+    public void setFrozen(boolean frozen)
+    {
+        this.frozen = frozen;
     }
 
     public String getTextureName()

@@ -31,15 +31,15 @@ public class LiveParticleEmitterUpdater extends LiveKeyframeUpdater<CustomPartic
             object.setLocalRotation((Quaternion) value);
         else if (type.equals(AnimationType.Scale))
             object.setLocalScale((Vector3f) value);
-        else if (type.equals(AnimationType.Particles_Start_Color))
+        else if (type.equals(AnimationType.Start_Color_Blend))
             object.setStartColor((ColorRGBA) value);
-        else if (type.equals(AnimationType.Particles_End_Color))
+        else if (type.equals(AnimationType.End_Color_Blend))
             object.setEndColor((ColorRGBA) value);
-        else if (type.equals(AnimationType.Particles_Frozen))
+        else if (type.equals(AnimationType.Frozen))
             object.setEnabled(!(boolean) value);
         else if (type.equals(AnimationType.Particles_Per_Second))
             object.setParticlesPerSec(Float.valueOf(value + "")); // k
-        else if (type.equals(AnimationType.Particles_Emit_All))
+        else if (type.equals(AnimationType.Emit_All))
             if ((boolean) value)
                 object.emitAllParticles();
     }
@@ -53,15 +53,15 @@ public class LiveParticleEmitterUpdater extends LiveKeyframeUpdater<CustomPartic
             return new Quaternion(object.getLocalRotation());
         else if (type.equals(AnimationType.Scale))
             return new Vector3f(object.getLocalScale());
-        else if (type.equals(AnimationType.Particles_Frozen))
+        else if (type.equals(AnimationType.Frozen))
             return !object.isEnabled();
         else if (type.equals(AnimationType.Particles_Per_Second))
             return object.getParticlesPerSec();
-        else if (type.equals(AnimationType.Particles_Emit_All))
+        else if (type.equals(AnimationType.Emit_All))
             return false;
-        else if (type.equals(AnimationType.Particles_End_Color))
+        else if (type.equals(AnimationType.End_Color_Blend))
             return object.getEndColor();
-        else if (type.equals(AnimationType.Particles_Start_Color))
+        else if (type.equals(AnimationType.Start_Color_Blend))
             return object.getStartColor();
         throw new Exception("No such live value!\n" + type.toString());
     }

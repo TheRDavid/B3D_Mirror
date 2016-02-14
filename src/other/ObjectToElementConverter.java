@@ -690,6 +690,7 @@ public class ObjectToElementConverter
                 particleEmitter.getMaterial().getAdditionalRenderState().isDepthWrite(),
                 particleEmitter.isFacingVelocity(), fn,
                 particleEmitter.isFiring(),
+                !particleEmitter.isEnabled(),
                 type,
                 particleEmitter.getShadowMode().toString());
     }

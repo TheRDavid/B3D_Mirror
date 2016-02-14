@@ -139,6 +139,7 @@ import monkeyStuff.LightScatteringMotionControl;
 import monkeyStuff.keyframeAnimation.LiveKeyframeAnimation;
 import monkeyStuff.keyframeAnimation.LiveKeyframeProperty;
 import monkeyStuff.keyframeAnimation.LiveKeyframeUpdater;
+import monkeyStuff.keyframeAnimation.Updaters.LiveLightUpdater;
 import monkeyStuff.keyframeAnimation.Updaters.LiveParticleEmitterUpdater;
 import monkeyStuff.keyframeAnimation.Updaters.LiveSpatialUpdater;
 
@@ -758,6 +759,7 @@ public class ElementToObjectConverter
                     new Vector3f(((B3D_SphereStartShape) b3D_ParticleEffect.getStartShape()).getCenter()),
                     ((B3D_SphereStartShape) b3D_ParticleEffect.getStartShape()).getRadius());
         }
+        particleEmitter.setEnabled(!b3D_ParticleEffect.isFrozen());
         particleEmitter.setFiring(b3D_ParticleEffect.isFiring());
         particleEmitter.setEndColor(new ColorRGBA(b3D_ParticleEffect.getEndColor()));
         particleEmitter.setShape(emitterShape);
@@ -1058,6 +1060,8 @@ public class ElementToObjectConverter
             updater = new LiveParticleEmitterUpdater((CustomParticleEmitter) object);
         else if (object instanceof Spatial)
             updater = new LiveSpatialUpdater((Spatial) object);
+        else if (object instanceof Light)
+            updater = new LiveLightUpdater((Light) object);
         for (Object keyframeProperty : updaterElement.getKeyframeProperties())
             updater.getKeyframeProperties().add(convertKeyframeProperty((B3D_KeyframeProperty) keyframeProperty, updater));
         return updater;
@@ -1114,7 +1118,7 @@ public class ElementToObjectConverter
                 Logger.getLogger(ElementToObjectConverter.class.getName()).log(Level.SEVERE, null, ex);
                 return null;
             }
-        } else if (keyframeProperty.type.equals(AnimationType.Particles_Frozen) || keyframeProperty.type.equals(AnimationType.Particles_Emit_All))
+        } else if (keyframeProperty.type.equals(AnimationType.Frozen) || keyframeProperty.type.equals(AnimationType.Emit_All))
         {
             Boolean[] boolVals = (Boolean[]) keyframeProperty.getValues();
             try
@@ -1130,7 +1134,7 @@ public class ElementToObjectConverter
                 Logger.getLogger(ElementToObjectConverter.class.getName()).log(Level.SEVERE, null, ex);
                 return null;
             }
-        } else if (keyframeProperty.type.equals(AnimationType.Particles_End_Color) || keyframeProperty.type.equals(AnimationType.Particles_Start_Color))
+        } else if (keyframeProperty.type.equals(AnimationType.End_Color_Blend) || keyframeProperty.type.equals(AnimationType.Start_Color_Blend) || keyframeProperty.type.equals(AnimationType.Light_Color_Blend))
         {
             ColorRGBA[] boolVals = (ColorRGBA[]) keyframeProperty.getValues();
             try
