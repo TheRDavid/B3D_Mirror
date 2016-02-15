@@ -504,7 +504,7 @@ public class ObjectToElementConverter
 
     public static B3D_Spatial convertSpatial(Spatial spatial)
     {
-        System.out.println("Spatial: " + spatial);
+        //System.out.println("Spatial: " + spatial);
         spatial.setUserData("autoSyncPhysicsToTransform", "y");
         B3D_Spatial b3D_Spatial = null;
         if (spatial.getUserData("modelName") != null)
@@ -539,7 +539,7 @@ public class ObjectToElementConverter
             else if (geometry instanceof CustomParticleEmitter)
                 b3D_Spatial = convertParticleEmitter((CustomParticleEmitter) geometry);
         }
-        System.out.println("B3D_Spatial: " + b3D_Spatial);
+        //System.out.println("B3D_Spatial: " + b3D_Spatial);
         if (spatial.getParent() != null && Wizard.getObjectReferences().getUUID(spatial.getParent().hashCode()) != null)
             b3D_Spatial.setParentUUID((UUID) (Wizard.getObjectReferences().getUUID(spatial.getParent().hashCode())));
         for (String key : spatial.getUserDataKeys())

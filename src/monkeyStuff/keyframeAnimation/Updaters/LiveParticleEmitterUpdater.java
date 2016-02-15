@@ -24,7 +24,7 @@ public class LiveParticleEmitterUpdater extends LiveKeyframeUpdater<CustomPartic
     @Override
     protected void setValue(AnimationType type, Object value)
     {
-        System.out.println("Emitter Setting to " + value);
+        //System.out.println("Emitter Setting to " + value);
         if (type.equals(AnimationType.Translation))
             object.setLocalTranslation((Vector3f) value);
         else if (type.equals(AnimationType.Rotation))

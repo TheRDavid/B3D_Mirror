@@ -139,8 +139,11 @@ import monkeyStuff.LightScatteringMotionControl;
 import monkeyStuff.keyframeAnimation.LiveKeyframeAnimation;
 import monkeyStuff.keyframeAnimation.LiveKeyframeProperty;
 import monkeyStuff.keyframeAnimation.LiveKeyframeUpdater;
-import monkeyStuff.keyframeAnimation.Updaters.LiveLightUpdater;
+import monkeyStuff.keyframeAnimation.Updaters.LiveALightUpdater;
+import monkeyStuff.keyframeAnimation.Updaters.LiveDLightUpdater;
+import monkeyStuff.keyframeAnimation.Updaters.LivePLightUpdater;
 import monkeyStuff.keyframeAnimation.Updaters.LiveParticleEmitterUpdater;
+import monkeyStuff.keyframeAnimation.Updaters.LiveSLightUpdater;
 import monkeyStuff.keyframeAnimation.Updaters.LiveSpatialUpdater;
 
 public class ElementToObjectConverter
@@ -264,7 +267,7 @@ public class ElementToObjectConverter
         dlsf.setShadowIntensity(b3D_Shadow.getIntensity());
         dlsf.setName(b3D_Shadow.getName());
         UUID lightUUID = b3D_Shadow.getLightUUID();
-        System.out.println("lightUUID: " + lightUUID);
+        //System.out.println("lightUUID: " + lightUUID);
         int lightID = Wizard.getObjectReferences().getID(lightUUID);
         dlsf.setLight((DirectionalLight) Wizard.getObjects().getOriginalObject(lightID));
         return dlsf;
@@ -1060,8 +1063,14 @@ public class ElementToObjectConverter
             updater = new LiveParticleEmitterUpdater((CustomParticleEmitter) object);
         else if (object instanceof Spatial)
             updater = new LiveSpatialUpdater((Spatial) object);
-        else if (object instanceof Light)
-            updater = new LiveLightUpdater((Light) object);
+        else if (object instanceof AmbientLight)
+            updater = new LiveALightUpdater((AmbientLight) object);
+        else if (object instanceof SpotLight)
+            updater = new LiveSLightUpdater((SpotLight) object);
+        else if (object instanceof DirectionalLight)
+            updater = new LiveDLightUpdater((DirectionalLight) object);
+        else if (object instanceof PointLight)
+            updater = new LivePLightUpdater((PointLight) object);
         for (Object keyframeProperty : updaterElement.getKeyframeProperties())
             updater.getKeyframeProperties().add(convertKeyframeProperty((B3D_KeyframeProperty) keyframeProperty, updater));
         return updater;
@@ -1070,7 +1079,10 @@ public class ElementToObjectConverter
     private static LiveKeyframeProperty convertKeyframeProperty(B3D_KeyframeProperty keyframeProperty, LiveKeyframeUpdater updater)
     {
         LiveKeyframeProperty lkp = null;
-        if (keyframeProperty.type.equals(AnimationType.Scale) || keyframeProperty.type.equals(AnimationType.Translation))
+        if (keyframeProperty.type.equals(AnimationType.Scale)
+                || keyframeProperty.type.equals(AnimationType.Translation)
+                || keyframeProperty.type.equals(AnimationType.Position)
+                || keyframeProperty.type.equals(AnimationType.Direction))
         {
             Vector3f[] vecVals = (Vector3f[]) keyframeProperty.getValues();
             try
@@ -1152,8 +1164,8 @@ public class ElementToObjectConverter
             }
         }
         //For all
-        System.out.println("lkp: " + lkp);
-        System.out.println("kfp: " + keyframeProperty);
+        //System.out.println("lkp: " + lkp);
+        //System.out.println("kfp: " + keyframeProperty);
         for (int i = 1; i < keyframeProperty.getValues().length - 1; i++)
         {
             lkp.getValues()[i] = keyframeProperty.getValues()[i];

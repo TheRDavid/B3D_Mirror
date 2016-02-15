@@ -119,7 +119,7 @@ public class B3D_Loader
             {
                 Object o = ElementToObjectConverter.convertToObject(element);
                 Wizard.getObjects().add(o, element);
-                System.out.println("Adding " + o);
+                //System.out.println("Adding " + o);
                 lights.add((Light) o);
                 rootNode.addLight((Light) o);
             } else if (element instanceof B3D_Spatial && ((B3D_Spatial) element).getParentUUID().equals(Wizard.NULL_SELECTION))

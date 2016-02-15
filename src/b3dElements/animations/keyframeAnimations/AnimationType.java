@@ -13,7 +13,9 @@ import java.io.Serializable;
 public enum AnimationType implements Serializable
 {
     //Light
-
+    Position,
+    Direction,
+    Radius,
     Light_Color_Blend, //ColorRGBA
     // Spatial
     Translation, //Vector3f

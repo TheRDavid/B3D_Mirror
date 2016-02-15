@@ -1,7 +1,6 @@
 package b3dElements.lights;
 
 import b3dElements.B3D_Element;
-import b3dElements.filters.B3D_BasicSSAO;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import java.io.Serializable;

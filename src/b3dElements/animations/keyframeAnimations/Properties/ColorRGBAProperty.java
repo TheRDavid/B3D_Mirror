@@ -11,7 +11,6 @@ import monkeyStuff.keyframeAnimation.LiveKeyframeUpdater;
 import b3dElements.animations.keyframeAnimations.AnimationType;
 import com.jme3.math.ColorRGBA;
 import java.io.Serializable;
-import javax.vecmath.Color3f;
 
 /**
  *
