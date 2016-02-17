@@ -88,6 +88,7 @@ import com.jme3.light.Light;
 import com.jme3.light.PointLight;
 import com.jme3.light.SpotLight;
 import com.jme3.material.Material;
+import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Spline;
@@ -300,7 +301,7 @@ public class ElementToObjectConverter
         slsf.setFlushQueues(b3D_Shadow.isFlushQueues());
         slsf.setShadowIntensity(b3D_Shadow.getIntensity());
         slsf.setName(b3D_Shadow.getName());
-        UUID lightUUID = b3D_Shadow.getUUID();
+        UUID lightUUID = /*b3D_Shadow.getUUID();*/UUID.fromString("27091dd9-2247-4b1a-b7f4-69ea6acb124f");
         int lightID = Wizard.getObjectReferences().getID(lightUUID);
         slsf.setLight((SpotLight) Wizard.getObjects().getOriginalObject(lightID));
         return slsf;
@@ -333,7 +334,7 @@ public class ElementToObjectConverter
         plsf.setFlushQueues(b3D_Shadow.isFlushQueues());
         plsf.setShadowIntensity(b3D_Shadow.getIntensity());
         plsf.setName(b3D_Shadow.getName());
-        UUID lightUUID = b3D_Shadow.getUUID();
+        UUID lightUUID = /*b3D_Shadow.getUUID()*/UUID.fromString("5e4259c6-7bb9-4622-933e-739486259d13");
         int lightID = Wizard.getObjectReferences().getID(lightUUID);
         plsf.setLight((PointLight) Wizard.getObjects().getOriginalObject(lightID));
         return plsf;
@@ -601,6 +602,7 @@ public class ElementToObjectConverter
         } else if (b3D_Spatial instanceof B3D_ParticleEffect)
         {
             CustomParticleEmitter particleEmitter = convertParticleEmitter((B3D_ParticleEffect) b3D_Spatial);
+            particleEmitter.setQueueBucket(RenderQueue.Bucket.Transparent);
             particleEmitter.setMaterial(new Material(Wizard.getAssetManager(), "Common/MatDefs/Misc/Particle.j3md"));
             particleEmitter.getMaterial().getAdditionalRenderState().setDepthWrite(((B3D_ParticleEffect) b3D_Spatial).isDepthWrite());
             String newValue = ((B3D_ParticleEffect) b3D_Spatial).getTextureName();
