@@ -5,13 +5,8 @@ import com.jme3.material.Material;
 import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
-import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
-import java.util.Vector;
-import other.Wizard;
 
 /**
  *
@@ -27,7 +22,7 @@ public class Gizmo extends Node
     private Material yArrowMaterial;
     private Material zArrowMaterial;
     private Node selectedArrow = null;
-    private float incFactor = 1.5f;
+    private float incFactor = 1.75f;
 
     public enum Arrow
     {
