@@ -301,7 +301,7 @@ public class ElementToObjectConverter
         slsf.setFlushQueues(b3D_Shadow.isFlushQueues());
         slsf.setShadowIntensity(b3D_Shadow.getIntensity());
         slsf.setName(b3D_Shadow.getName());
-        UUID lightUUID = /*b3D_Shadow.getUUID();*/UUID.fromString("27091dd9-2247-4b1a-b7f4-69ea6acb124f");
+        UUID lightUUID = b3D_Shadow.getLightUUID();
         int lightID = Wizard.getObjectReferences().getID(lightUUID);
         slsf.setLight((SpotLight) Wizard.getObjects().getOriginalObject(lightID));
         return slsf;
@@ -334,7 +334,8 @@ public class ElementToObjectConverter
         plsf.setFlushQueues(b3D_Shadow.isFlushQueues());
         plsf.setShadowIntensity(b3D_Shadow.getIntensity());
         plsf.setName(b3D_Shadow.getName());
-        UUID lightUUID = /*b3D_Shadow.getUUID()*/UUID.fromString("5e4259c6-7bb9-4622-933e-739486259d13");
+        UUID lightUUID = b3D_Shadow.getLightUUID();
+        System.out.println("READING "+lightUUID);
         int lightID = Wizard.getObjectReferences().getID(lightUUID);
         plsf.setLight((PointLight) Wizard.getObjects().getOriginalObject(lightID));
         return plsf;

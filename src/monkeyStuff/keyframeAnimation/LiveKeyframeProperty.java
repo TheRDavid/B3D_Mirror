@@ -50,6 +50,7 @@ public abstract class LiveKeyframeProperty<E extends Serializable>
 
     public final void storeIndexes()
     {
+        indices.clear();
         for (int i = 0; i < values.length; i++)
             if (values[i] != null)
                 indices.add(i);
