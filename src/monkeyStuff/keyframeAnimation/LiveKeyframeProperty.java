@@ -63,7 +63,7 @@ public abstract class LiveKeyframeProperty<E extends Serializable>
             E[] valuesCopy = (E[]) Array.newInstance(values[0].getClass(), values.length);
             for (int i = 0; i < values.length; i++)
                 valuesCopy[i] = values[i];
-            values = (E[]) Array.newInstance(values[0].getClass(), frame + 1);
+            values = (E[]) Array.newInstance(values[0].getClass(), frame + 100);
             for (int i = 0; i < valuesCopy.length; i++)
                 values[i] = valuesCopy[i];
         }

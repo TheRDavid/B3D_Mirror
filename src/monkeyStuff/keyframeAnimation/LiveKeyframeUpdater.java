@@ -41,9 +41,7 @@ public abstract class LiveKeyframeUpdater<E>
         {
             kfp.setDone(kfp.getValues().length <= frame);
             if (!kfp.isDone())
-            {
                 setValue(kfp.type, kfp.step(frame));
-            }
         }
     }
 
