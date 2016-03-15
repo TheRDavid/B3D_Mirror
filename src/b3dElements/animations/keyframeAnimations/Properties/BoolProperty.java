@@ -35,9 +35,7 @@ public class BoolProperty extends LiveKeyframeProperty<Boolean> implements Seria
         boolean cDone = false;
         int cStart = 0;
         while (!cDone)
-        {
             for (int i = cStart + 1; i < values.length; i++)
-            {
                 if (values[i] != null)
                 {
                     for (int j = cStart + 1; j < i; j++)
@@ -45,8 +43,6 @@ public class BoolProperty extends LiveKeyframeProperty<Boolean> implements Seria
                     cStart = i;
                     cDone = cStart == values.length - 1;
                 }
-            }
-        }
     }
 
     @Override

@@ -45,10 +45,22 @@ public class Vector3fProperty extends LiveKeyframeProperty<Vector3f> implements 
                     Vector3f startVector = values[cStart];
                     Vector3f endVector = values[i];
                     Vector3f diffVector = endVector.subtract(startVector).divide(inBetween);
-                    //linear
+                    // linear
                     for (int j = cStart + 1; j < i; j++)
                     {
                         values[j] = values[j - 1].add(diffVector);
+                    }
+                    // ease in
+                    double k = 0;
+                    for (int j = cStart + 1; j < i; j++, k += 2 / (double)inBetween)
+                    {
+                        values[j] = values[j - 1].add(diffVector.mult((float) k));
+                    }
+                    // ease out
+                    double l = 2;
+                    for (int j = cStart + 1; j < i; j++, l -= 2 / (double)inBetween)
+                    {
+                        values[j] = values[j - 1].add(diffVector.mult((float) l));
                     }
                     cStart = i;
                     cDone = cStart == values.length - 1;

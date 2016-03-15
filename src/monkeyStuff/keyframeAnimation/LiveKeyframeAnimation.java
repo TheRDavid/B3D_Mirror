@@ -92,6 +92,11 @@ public class LiveKeyframeAnimation
     {
         playing = false;
         currentFrame = 0;
+        for (LiveKeyframeUpdater u : updaters)
+        {
+            currentFrame = 0;
+            u.reset();
+        }
     }
 
     public void jump(int frame)
@@ -124,6 +129,7 @@ public class LiveKeyframeAnimation
 
     public void goTo(int currentFrame)
     {
+        this.currentFrame = currentFrame;
         for (LiveKeyframeUpdater u : updaters)
             u.goTo(currentFrame);
     }

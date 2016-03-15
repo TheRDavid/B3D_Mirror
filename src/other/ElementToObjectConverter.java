@@ -15,6 +15,7 @@ import b3dElements.animations.keyframeAnimations.Properties.BoolProperty;
 import b3dElements.animations.keyframeAnimations.Properties.ColorRGBAProperty;
 import b3dElements.animations.keyframeAnimations.Properties.IntProperty;
 import b3dElements.animations.keyframeAnimations.Properties.QuaternionProperty;
+import b3dElements.animations.keyframeAnimations.Properties.UUIDProperty;
 import b3dElements.animations.keyframeAnimations.Properties.Vector3fProperty;
 import b3dElements.controls.B3D_Control;
 import b3dElements.filters.B3D_BasicSSAO;
@@ -335,7 +336,7 @@ public class ElementToObjectConverter
         plsf.setShadowIntensity(b3D_Shadow.getIntensity());
         plsf.setName(b3D_Shadow.getName());
         UUID lightUUID = b3D_Shadow.getLightUUID();
-        System.out.println("READING "+lightUUID);
+        System.out.println("READING " + lightUUID);
         int lightID = Wizard.getObjectReferences().getID(lightUUID);
         plsf.setLight((PointLight) Wizard.getObjects().getOriginalObject(lightID));
         return plsf;
@@ -1127,6 +1128,22 @@ public class ElementToObjectConverter
                         intVals.length,
                         intVals[0],
                         intVals[intVals.length - 1],
+                        updater);
+            } catch (Exception ex)
+            {
+                Logger.getLogger(ElementToObjectConverter.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
+            }
+        } else if (keyframeProperty.type.equals(AnimationType.Translation_Constraint))
+        {
+            UUID[] uuidVals = (UUID[]) keyframeProperty.getValues();
+            try
+            {
+                lkp = new UUIDProperty(
+                        keyframeProperty.type,
+                        uuidVals.length,
+                        uuidVals[0],
+                        uuidVals[uuidVals.length - 1],
                         updater);
             } catch (Exception ex)
             {

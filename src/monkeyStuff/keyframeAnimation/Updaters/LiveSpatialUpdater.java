@@ -5,8 +5,11 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import java.io.Serializable;
+import java.util.UUID;
 import monkeyStuff.keyframeAnimation.LiveKeyframeProperty;
 import monkeyStuff.keyframeAnimation.LiveKeyframeUpdater;
+import monkeyStuff.keyframeAnimation.TranslationControl;
+import other.Wizard;
 
 /**
  *
@@ -23,15 +26,27 @@ public class LiveSpatialUpdater extends LiveKeyframeUpdater<Spatial>
     @Override
     protected void setValue(AnimationType type, Object value)
     {
-        //System.out.println("Spatial Setting to " + value);
+        System.out.println("Spatial Setting to " + value);
         if (type.equals(AnimationType.Translation))
             object.setLocalTranslation((Vector3f) value);
         else if (type.equals(AnimationType.Rotation))
         {
-           // System.out.println("Setting to " + value);
+            // System.out.println("Setting to " + value);
             object.setLocalRotation((Quaternion) value);
         } else if (type.equals(AnimationType.Scale))
             object.setLocalScale((Vector3f) value);
+        else if (type.equals(AnimationType.Translation_Constraint) && value != null)
+        {
+            System.out.println("CONSTRAINT CHANGED");
+            object.removeControl(TranslationControl.class);
+            if (!Wizard.NULL_SELECTION.equals(value))
+            {
+                System.out.println("NEW CONTRAINT");
+                int hashCode = Wizard.getObjectReferences().getID((UUID) value);
+                Spatial spat = (Spatial) Wizard.getObjects().getOriginalObject(hashCode);
+                object.addControl(new TranslationControl(spat, object));
+            }
+        }
     }
 
     @Override
@@ -43,6 +58,8 @@ public class LiveSpatialUpdater extends LiveKeyframeUpdater<Spatial>
             return new Quaternion(object.getLocalRotation());
         else if (type.equals(AnimationType.Scale))
             return new Vector3f(object.getLocalScale());
+        else if (type.equals(AnimationType.Translation_Constraint))
+            return Wizard.NULL_SELECTION;
         throw new Exception("No such live value!\n" + type.toString());
     }
 

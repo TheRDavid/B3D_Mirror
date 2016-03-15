@@ -34,6 +34,7 @@ public class LivePLightUpdater extends LiveKeyframeUpdater<PointLight>
             object.setColor((ColorRGBA) value);
         else if (type.equals(AnimationType.Position))
             object.setPosition((Vector3f) value);
+            
     }
 
     @Override

@@ -39,8 +39,10 @@ public abstract class LiveKeyframeUpdater<E>
             frame = maxFrames - 1;
         for (LiveKeyframeProperty kfp : keyframeProperties)
         {
-            kfp.setDone(kfp.getValues().length <= frame);
-            if (!kfp.isDone())
+            //System.out.println("LENGTH of " + kfp.type + ": " + kfp.getValues().length + " - FRAME: " + frame);
+            boolean done = kfp.getValues().length <= frame;
+            kfp.setDone(kfp.type.toString().contains("Constraint") ? true : done);
+            if (!done)
                 setValue(kfp.type, kfp.step(frame));
         }
     }

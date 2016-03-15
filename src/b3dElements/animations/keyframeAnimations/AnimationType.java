@@ -6,6 +6,7 @@ package b3dElements.animations.keyframeAnimations;
 
 import b3dElements.animations.keyframeAnimations.Properties.BoolProperty;
 import b3dElements.animations.keyframeAnimations.Properties.ColorRGBAProperty;
+import b3dElements.animations.keyframeAnimations.Properties.UUIDProperty;
 import b3dElements.animations.keyframeAnimations.Properties.IntProperty;
 import b3dElements.animations.keyframeAnimations.Properties.QuaternionProperty;
 import b3dElements.animations.keyframeAnimations.Properties.Vector3fProperty;
@@ -17,22 +18,30 @@ import java.io.Serializable;
  */
 public enum AnimationType implements Serializable
 {
-    //Light
+    // Light
 
     Position, // Vector3f
     Direction, // Vector3f
     Radius, // Float - not yet implemented!
     Light_Color_Blend, //ColorRGBA
+
     // Spatial
+
     Translation, //Vector3f
     Rotation, //Quaternion
     Scale, // Vector3f
-    //Particle Emitter
+
+    // Particle Emitter
+
     Frozen, //boolean
     Particles_Per_Second, //int 
     Emit_All, // boolean 
     Start_Color_Blend, // ColorRGBA 
-    End_Color_Blend; // ColorRGBA 
+    End_Color_Blend, // ColorRGBA 
+
+    // Constraints
+
+    Translation_Constraint; // UUID
 
     public static AnimationType valueOfString(String s)
     {
@@ -48,16 +57,18 @@ public enum AnimationType implements Serializable
     public boolean legit(Class c)
     {
         if (c.equals(BoolProperty.class))
-            return this == Frozen 
+            return this == Frozen
                     || this == Emit_All;
         if (c.equals(ColorRGBAProperty.class))
-            return this == Light_Color_Blend 
-                    || this == Start_Color_Blend 
+            return this == Light_Color_Blend
+                    || this == Start_Color_Blend
                     || this == End_Color_Blend;
         if (c.equals(IntProperty.class))
             return this == Particles_Per_Second;
         if (c.equals(QuaternionProperty.class))
             return this == Rotation;
+        if (c.equals(UUIDProperty.class))
+            return this == Translation_Constraint;
         if (c.equals(Vector3fProperty.class))
             return this == Position
                     || this == Direction
