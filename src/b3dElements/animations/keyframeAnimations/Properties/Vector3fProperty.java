@@ -4,12 +4,13 @@
  */
 package b3dElements.animations.keyframeAnimations.Properties;
 
+import b3dElements.animations.keyframeAnimations.AnimationType;
+import b3dElements.animations.keyframeAnimations.InterpolationType;
 import com.jme3.math.Vector3f;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import monkeyStuff.keyframeAnimation.LiveKeyframeProperty;
 import monkeyStuff.keyframeAnimation.LiveKeyframeUpdater;
-import b3dElements.animations.keyframeAnimations.AnimationType;
 import java.io.Serializable;
 
 /**
@@ -45,22 +46,19 @@ public class Vector3fProperty extends LiveKeyframeProperty<Vector3f> implements 
                     Vector3f startVector = values[cStart];
                     Vector3f endVector = values[i];
                     Vector3f diffVector = endVector.subtract(startVector).divide(inBetween);
-                    // linear
-                    for (int j = cStart + 1; j < i; j++)
+                    if (getInterpolationType(cStart).equals(InterpolationType.Linear))
+                        for (int j = cStart + 1; j < i; j++)
+                            values[j] = values[j - 1].add(diffVector);
+                    else if (getInterpolationType(cStart).equals(InterpolationType.Ease_In))
                     {
-                        values[j] = values[j - 1].add(diffVector);
-                    }
-                    // ease in
-                    double k = 0;
-                    for (int j = cStart + 1; j < i; j++, k += 2 / (double)inBetween)
+                        double k = 0;
+                        for (int j = cStart + 1; j < i; j++, k += 2 / (double) inBetween)
+                            values[j] = values[j - 1].add(diffVector.mult((float) k));
+                    } else if (getInterpolationType(cStart).equals(InterpolationType.Ease_Out))
                     {
-                        values[j] = values[j - 1].add(diffVector.mult((float) k));
-                    }
-                    // ease out
-                    double l = 2;
-                    for (int j = cStart + 1; j < i; j++, l -= 2 / (double)inBetween)
-                    {
-                        values[j] = values[j - 1].add(diffVector.mult((float) l));
+                        double k = 2;
+                        for (int j = cStart + 1; j < i; j++, k -= 2 / (double) inBetween)
+                            values[j] = values[j - 1].add(diffVector.mult((float) k));
                     }
                     cStart = i;
                     cDone = cStart == values.length - 1;
@@ -76,8 +74,11 @@ public class Vector3fProperty extends LiveKeyframeProperty<Vector3f> implements 
         try
         {
             LiveKeyframeProperty property = new Vector3fProperty(type, values.length, new Vector3f(values[0]), new Vector3f(values[values.length - 1]), kfu);
-            for (int i = 1; i < values.length - 1; i++)
-                property.setValue(i, values[i]);
+            for (int i = 0; i < values.length - 1; i++)
+            {
+                InterpolationType iT = getInterpolationTypes()[i];
+                property.setValue(i, values[i], iT);
+            }
             return property;
         } catch (Exception ex)
         {

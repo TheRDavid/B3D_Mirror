@@ -1191,6 +1191,7 @@ public class ElementToObjectConverter
             lkp.getValues()[i] = keyframeProperty.getValues()[i];
         }
         lkp.setIndices(new ArrayList<Integer>(keyframeProperty.getIndices()));
+        lkp.setInterpolationTypes(keyframeProperty.getInterpolationTypes());
         lkp.uncalcValues();
         return lkp;
     }

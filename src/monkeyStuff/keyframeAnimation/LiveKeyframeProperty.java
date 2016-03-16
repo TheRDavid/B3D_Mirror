@@ -1,8 +1,9 @@
 package monkeyStuff.keyframeAnimation;
 
+import b3dElements.animations.keyframeAnimations.AnimationType;
+import b3dElements.animations.keyframeAnimations.InterpolationType;
 import java.io.Serializable;
 import java.lang.reflect.Array;
-import b3dElements.animations.keyframeAnimations.AnimationType;
 import java.util.ArrayList;
 
 /**
@@ -14,10 +15,10 @@ public abstract class LiveKeyframeProperty<E extends Serializable>
 
     protected boolean done = false;
     protected E[] values;
+    protected InterpolationType[] interpolationTypes;
     public AnimationType type;
     protected LiveKeyframeUpdater updater;
-    private ArrayList<int[]> indices = new ArrayList<>();
-    public static final int EASE_IN = 0, EASE_OUT = 1, LINEAR = 2;
+    private ArrayList<Integer> indices = new ArrayList<>();
 
     public LiveKeyframeProperty(AnimationType type, int frames, E firstValue, E lastValue, LiveKeyframeUpdater kfu) throws Exception
     {
@@ -26,8 +27,11 @@ public abstract class LiveKeyframeProperty<E extends Serializable>
         updater = kfu;
         //values = (E[]) new Object[frames];
         values = (E[]) Array.newInstance(firstValue.getClass(), frames);
+        interpolationTypes = new InterpolationType[frames];
         values[0] = firstValue;
         values[frames - 1] = lastValue;
+        interpolationTypes[0] = InterpolationType.Linear;
+        interpolationTypes[frames - 1] = InterpolationType.Linear;
         this.type = type;
     }
 
@@ -38,9 +42,12 @@ public abstract class LiveKeyframeProperty<E extends Serializable>
         //values = (E[]) new Object[frames];
         updater = kfu;
         values = (E[]) Array.newInstance(firstValue.getClass(), frames);
+        interpolationTypes = new InterpolationType[frames];
         // System.out.println("setze [0] auf "+firstValue);
         values[0] = firstValue;
         values[frames - 1] = firstValue;
+        interpolationTypes[0] = InterpolationType.Linear;
+        interpolationTypes[frames - 1] = InterpolationType.Linear;
         this.type = type;
     }
 
@@ -57,7 +64,34 @@ public abstract class LiveKeyframeProperty<E extends Serializable>
                 indices.add(i);
     }
 
-    public void setValue(int frame, E value)
+    public void setInterpolationType(int frame, InterpolationType iType)
+    {
+        if (frame >= 0)
+        {
+            if (frame >= values.length)
+            {
+                InterpolationType[] iTypesCopy = new InterpolationType[interpolationTypes.length];
+                for (int i = 0; i < interpolationTypes.length; i++)
+                    iTypesCopy[i] = interpolationTypes[i];
+                interpolationTypes = new InterpolationType[frame + 100];
+                for (int i = 0; i < iTypesCopy.length; i++)
+                    interpolationTypes[i] = iTypesCopy[i];
+            }
+            interpolationTypes[frame] = iType;
+        }
+    }
+
+    public InterpolationType[] getInterpolationTypes()
+    {
+        return interpolationTypes;
+    }
+
+    public void setInterpolationTypes(InterpolationType[] interpolationTypes)
+    {
+        this.interpolationTypes = interpolationTypes;
+    }
+
+    public void setValue(int frame, E value, InterpolationType iType)
     {
         if (frame >= 0)
         {
@@ -69,8 +103,18 @@ public abstract class LiveKeyframeProperty<E extends Serializable>
                 values = (E[]) Array.newInstance(values[0].getClass(), frame + 100);
                 for (int i = 0; i < valuesCopy.length; i++)
                     values[i] = valuesCopy[i];
+                if (iType != InterpolationType.Keep)
+                {
+                    InterpolationType[] iTypesCopy = (InterpolationType[]) Array.newInstance(interpolationTypes[0].getClass(), interpolationTypes.length);
+                    for (int i = 0; i < interpolationTypes.length; i++)
+                        iTypesCopy[i] = interpolationTypes[i];
+                    interpolationTypes = (InterpolationType[]) Array.newInstance(interpolationTypes[0].getClass(), frame + 100);
+                    for (int i = 0; i < iTypesCopy.length; i++)
+                        interpolationTypes[i] = iTypesCopy[i];
+                }
             }
             values[frame] = value;
+            interpolationTypes[frame] = iType;
         } else
             System.out.println("Trying to set value at negative index! (kfp)");
     }
@@ -147,5 +191,17 @@ public abstract class LiveKeyframeProperty<E extends Serializable>
         for (int i = 1; i < values.length - 1; i++)
             if (!indices.contains(i)) // should be optimized... but probably won't, since it's not realtime
                 values[i] = null;
+    }
+
+    public InterpolationType getInterpolationType(int frame)
+    {
+
+        InterpolationType iT = null;
+        while (iT == null)
+        {
+            System.out.println("Searching for current interpolation type. Found " + interpolationTypes[frame] + " at " + frame + " in " + this);
+            iT = interpolationTypes[frame--];
+        }
+        return iT;
     }
 }

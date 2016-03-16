@@ -26,7 +26,7 @@ public class LiveSpatialUpdater extends LiveKeyframeUpdater<Spatial>
     @Override
     protected void setValue(AnimationType type, Object value)
     {
-        System.out.println("Spatial Setting to " + value);
+       // System.out.println("Spatial Setting to " + value);
         if (type.equals(AnimationType.Translation))
             object.setLocalTranslation((Vector3f) value);
         else if (type.equals(AnimationType.Rotation))

@@ -9,11 +9,11 @@ import java.util.logging.Logger;
 import monkeyStuff.keyframeAnimation.LiveKeyframeProperty;
 import monkeyStuff.keyframeAnimation.LiveKeyframeUpdater;
 import b3dElements.animations.keyframeAnimations.AnimationType;
+import b3dElements.animations.keyframeAnimations.InterpolationType;
 import com.jme3.scene.Spatial;
 import java.io.Serializable;
 import java.util.UUID;
 import monkeyStuff.keyframeAnimation.ConstraintControl;
-import other.Wizard;
 
 /**
  *
@@ -70,7 +70,7 @@ public class UUIDProperty extends LiveKeyframeProperty<UUID> implements Serializ
         {
             LiveKeyframeProperty property = new UUIDProperty(type, values.length, values[0], values[values.length - 1], kfu);
             for (int i = 1; i < values.length - 1; i++)
-                property.setValue(i, values[i]);
+                property.setValue(i, values[i], InterpolationType.Linear);
             return property;
         } catch (Exception ex)
         {

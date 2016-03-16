@@ -168,7 +168,7 @@ public class ObjectToElementConverter
         B3D_KeyframeProperty propertyElement;
         try
         {
-            propertyElement = new B3D_KeyframeProperty(lkp.type, lkp.getValues());
+            propertyElement = new B3D_KeyframeProperty(lkp.type, lkp.getValues(), lkp.getInterpolationTypes());
             propertyElement.setIndices(new ArrayList<Integer>(lkp.getIndices()));
         } catch (Exception ex)
         {

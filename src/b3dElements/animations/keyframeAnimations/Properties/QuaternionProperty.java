@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import monkeyStuff.keyframeAnimation.LiveKeyframeProperty;
 import monkeyStuff.keyframeAnimation.LiveKeyframeUpdater;
 import b3dElements.animations.keyframeAnimations.AnimationType;
+import b3dElements.animations.keyframeAnimations.InterpolationType;
 import java.io.Serializable;
 
 /**
@@ -42,19 +43,48 @@ public class QuaternionProperty extends LiveKeyframeProperty<Quaternion> impleme
             {
                 if (values[i] != null)
                 {
-                    float inBetween = 1/(i - currentStartF);
+                    System.out.println("Calculating with interpolation type: " + getInterpolationType(currentStart));
+                    float inBetween = 1 / (i - currentStartF);
                     Quaternion startQuaternion = values[currentStart];
                     Quaternion endQuaternion = values[i];
-                   // System.out.println("Interpolation");
-                    //linear
-                    for (int j = currentStart + 1; j <= i; j++)
-                    {
-                        float factor = (j - currentStart) * inBetween;
-                        Quaternion diffQuaternion = new Quaternion();
-                        diffQuaternion.slerp(new Quaternion(startQuaternion), new Quaternion(endQuaternion), factor);
-                        //System.out.println(diffQuaternion + "\tat " + factor);
+                    // System.out.println("Interpolation");
+                    //linear                 
+                    if (getInterpolationType(currentStart).equals(InterpolationType.Linear))
+                        for (int j = currentStart + 1; j < i; j++)
+                        {
+                            float factor = (j - currentStart) * inBetween;
+                            Quaternion diffQuaternion = new Quaternion();
+                            diffQuaternion.slerp(new Quaternion(startQuaternion), new Quaternion(endQuaternion), factor);
+                            System.out.println(diffQuaternion + "\t lin at " + factor);
 
-                        values[j] = new Quaternion(diffQuaternion);
+                            values[j] = new Quaternion(diffQuaternion);
+                        }
+                    // easeIn
+                    else if (getInterpolationType(currentStart).equals(InterpolationType.Ease_In))
+                    {
+                        double k = 0;
+                        for (int j = currentStart + 1; j < i; j++, k += 1 / (double) (i - currentStartF))
+                        {
+                            float factor = (j - currentStart) * inBetween * (float) k;
+                            Quaternion diffQuaternion = new Quaternion();
+                            diffQuaternion.slerp(new Quaternion(startQuaternion), new Quaternion(endQuaternion), factor);
+                            System.out.println(diffQuaternion + "\t easeIn at " + factor+ " with k = "+k);
+
+                            values[j] = new Quaternion(diffQuaternion);
+                        }
+                    }// easeOut
+                    else if (getInterpolationType(currentStart).equals(InterpolationType.Ease_Out))
+                    {
+                        double k = 2;
+                        for (int j = currentStart + 1; j < i; j++, k -= 1 / (double) (i - currentStartF))
+                        {
+                            float factor = (j - currentStart) * inBetween * (float) k;
+                            Quaternion diffQuaternion = new Quaternion();
+                            diffQuaternion.slerp(new Quaternion(startQuaternion), new Quaternion(endQuaternion), factor);
+                            System.out.println(diffQuaternion + "\t easeOut at " + factor+ " with k = "+k);
+
+                            values[j] = new Quaternion(diffQuaternion);
+                        }
                     }
                     currentStart = i;
                     currentStartF = i;
@@ -72,8 +102,11 @@ public class QuaternionProperty extends LiveKeyframeProperty<Quaternion> impleme
         {
             LiveKeyframeProperty property = new QuaternionProperty(type, values.length,
                     new Quaternion(values[0]), new Quaternion(values[values.length - 1]), kfu);
-            for (int i = 1; i < values.length - 1; i++)
-                property.setValue(i, values[i]);
+            for (int i = 0; i < values.length - 1; i++)
+            {
+                InterpolationType iT = getInterpolationType(i);
+                property.setValue(i, values[i], iT);
+            }
             return property;
         } catch (Exception ex)
         {

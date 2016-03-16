@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import monkeyStuff.keyframeAnimation.LiveKeyframeProperty;
 import monkeyStuff.keyframeAnimation.LiveKeyframeUpdater;
 import b3dElements.animations.keyframeAnimations.AnimationType;
+import b3dElements.animations.keyframeAnimations.InterpolationType;
 import java.io.Serializable;
 
 /**
@@ -73,7 +74,10 @@ public class IntProperty extends LiveKeyframeProperty<Integer> implements Serial
         {
             LiveKeyframeProperty property = new IntProperty(type, values.length, values[0], values[values.length - 1], kfu);
             for (int i = 1; i < values.length - 1; i++)
-                property.setValue(i, values[i]);
+            {
+                InterpolationType iT = getInterpolationType(i);
+                property.setValue(i, values[i], iT);
+            }
             return property;
         } catch (Exception ex)
         {
