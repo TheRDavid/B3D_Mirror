@@ -42,17 +42,37 @@ public class IntProperty extends LiveKeyframeProperty<Integer> implements Serial
             {
                 if (values[i] != null)
                 {
+                    System.out.println("Calculating with "+getInterpolationType(cStart));
                     double inBetween = i - cStart;
                     double start = values[cStart];
                     double end = values[i];
                     double diff = (end - start) / inBetween;
-                    //linear
                     copyOf[cStart] = (double) values[cStart];
-                    for (int j = cStart + 1; j < i; j++)
+                    if (getInterpolationType(cStart).equals(InterpolationType.Linear))
+                        for (int j = cStart + 1; j < i; j++)
+                        {
+                            double d = copyOf[j - 1] + diff;
+                            //          System.out.println(copyOf[j - 1] + " + " + diff + " = " + d);
+                            copyOf[j] = d;
+                        }
+                    else if (getInterpolationType(cStart).equals(InterpolationType.Ease_In))
                     {
-                        double d = copyOf[j - 1] + diff;
-                        //          System.out.println(copyOf[j - 1] + " + " + diff + " = " + d);
-                        copyOf[j] = d;
+                        double k = 0;
+                        for (int j = cStart + 1; j < i; j++, k += 2 / (double) inBetween)
+                        {
+                            double d = copyOf[j - 1] + diff * k;
+                            //          System.out.println(copyOf[j - 1] + " + " + diff + " = " + d);
+                            copyOf[j] = d;
+                        }
+                    } else if (getInterpolationType(cStart).equals(InterpolationType.Ease_Out))
+                    {
+                        double k = 2;
+                        for (int j = cStart + 1; j < i; j++, k -= 2 / (double) inBetween)
+                        {
+                            double d = copyOf[j - 1] + diff * k;
+                            //          System.out.println(copyOf[j - 1] + " + " + diff + " = " + d);
+                            copyOf[j] = d;
+                        }
                     }
                     for (int j = cStart + 1; j < i; j++)
                     {
@@ -73,7 +93,7 @@ public class IntProperty extends LiveKeyframeProperty<Integer> implements Serial
         try
         {
             LiveKeyframeProperty property = new IntProperty(type, values.length, values[0], values[values.length - 1], kfu);
-            for (int i = 1; i < values.length - 1; i++)
+            for (int i = 0; i < values.length - 1; i++)
             {
                 InterpolationType iT = getInterpolationType(i);
                 property.setValue(i, values[i], iT);
